@@ -7,5 +7,9 @@ public abstract class Movement {
     public Movement(int distance) {
         this.distance = distance;
     }
+
+    public int getDistance() {
+        return distance;
+    }
 }
 

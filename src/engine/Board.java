@@ -11,10 +11,11 @@ public class Board {
         void action(Piece piece, Cell cell);
     }
     private PieceListener onAddPiece;
+    private PieceListener onRemovePiece;
     private int width;
     private int height;
     private Cell[][] cells;
-    private int turn;
+    private int turn = 1;
 
     public Board(int width, int height) {
 
@@ -27,7 +28,34 @@ public class Board {
     }
 
     public boolean doMovement( int x1, int y1, int x2, int y2 ) {
+
+        // Check if the piece is on the board
+        Piece piece = cells[x1][y1].getPiece();
+
+        if(piece == null) return false;
+
+        // Check if the piece is the same color as the current player
+        if(piece.getColor() != getCurrentPlayer()) return false;
+
+        // Check if the piece can move to the new position
+        if(!piece.canMove(x1, y1, x2, y2)) return false;
+
+        // do the movement
+        movePiece(x1, y1, x2, y2);
+
         return true;
+    }
+
+    private void movePiece(int x1, int y1, int x2, int y2) {
+
+        Piece piece = cells[x1][y1].getPiece();
+
+        removePiece(x1, y1);
+
+        setPiece(piece, x2, y2);
+
+        // Update the turn
+        turn++;
     }
 
     public boolean isCheck( PlayerColor color ) {
@@ -108,6 +136,15 @@ public class Board {
         }
     }
 
+    public void removePiece(int x, int y) {
+        checkPositionOnBoard(x, y);
+        cells[x][y].removePiece();
+
+        if(onRemovePiece != null) {
+            onRemovePiece.action(null, cells[x][y]);
+        }
+    }
+
     private void checkPositionOnBoard(int x, int y) {
         if(x < 0 || x >= width || y < 0 || y >= height)
             throw new IllegalArgumentException("Position out of board");
@@ -117,9 +154,12 @@ public class Board {
         return turn % 2 == 1 ? PlayerColor.WHITE : PlayerColor.BLACK;
     }
 
-    public void setPieceListener(PieceListener listener) {
-
+    public void setAddPieceListener(PieceListener listener) {
         this.onAddPiece = listener;
+    }
+
+    public void setRemovePieceListener(PieceListener listener) {
+        this.onRemovePiece = listener;
     }
 
 }

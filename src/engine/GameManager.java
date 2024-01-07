@@ -2,7 +2,6 @@ package engine;
 
 import chess.ChessController;
 import chess.ChessView;
-import engine.pieces.Piece;
 
 public class GameManager implements ChessController {
 
@@ -29,9 +28,17 @@ public class GameManager implements ChessController {
 
     private  void initListeners() {
 
-        board.setPieceListener((piece, cell) -> {
+        // Add the listener to add pieces
+        board.setAddPieceListener((piece, cell) -> {
             if(view != null) {
                 view.putPiece(piece.getType(), piece.getColor(), cell.getX(), cell.getY());
+            }
+        });
+
+        // Add the listener to remove pieces
+        board.setRemovePieceListener((piece, cell) -> {
+            if(view != null) {
+                view.removePiece(cell.getX(), cell.getY());
             }
         });
 
@@ -56,7 +63,14 @@ public class GameManager implements ChessController {
 
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {
-        return false;
+
+        // Check if the movement is valid
+        boolean valid = board.doMovement(fromX, fromY, toX, toY);
+
+        // Update the message
+        updateMessage();
+
+        return valid;
     }
 
     @Override
