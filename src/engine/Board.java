@@ -38,7 +38,11 @@ public class Board {
         if(piece.getColor() != getCurrentPlayer()) return false;
 
         // Check if the piece can move to the new position
-        if(!piece.canMove(x1, y1, x2, y2)) return false;
+        if(piece.getColor() == PlayerColor.BLACK){if(!piece.canMove(x1, x2, y2, y1)) return false;}
+        else {if(!piece.canMove(x1, x2, y1, y2)) return false;}
+
+        // Check if the part eats another
+        //TODO a faire ...
 
         // do the movement
         movePiece(x1, y1, x2, y2);

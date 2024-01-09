@@ -2,19 +2,29 @@ package engine.pieces;
 
 import chess.PieceType;
 import chess.PlayerColor;
-import engine.movements.HorizontalMovement;
+import engine.movements.Move;
 import engine.movements.Movement;
-import engine.movements.VerticalMovement;
 
 public class Pawn extends Piece {
+    Movement[] movements;
+    boolean firstMovement;
 
     public Pawn(PlayerColor color) {
-        super(PieceType.PAWN, color);
+        super(PieceType.PAWN, color, new Movement[]{
+                new Movement(Move.VERTICAL, 1, 0)
+        });
+        setFirstMovement();
+    }
 
-        Movement[] movements = new Movement[1];
+    public boolean isFirstMovement() {
+        return this.firstMovement;
+    }
 
-        movements[0] = new VerticalMovement(1, color == PlayerColor.WHITE);
+    public void setFirstMovement(){
+        this.firstMovement = true;
+    }
 
-        setMovements(movements);
+    public void clearFirstMovement(){
+        this.firstMovement = false;
     }
 }
