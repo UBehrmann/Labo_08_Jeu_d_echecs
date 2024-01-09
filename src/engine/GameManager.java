@@ -2,6 +2,7 @@ package engine;
 
 import chess.ChessController;
 import chess.ChessView;
+import engine.pieces.*;
 
 public class GameManager implements ChessController {
 
@@ -52,6 +53,54 @@ public class GameManager implements ChessController {
         board.setRemovePieceListener((piece, cell) -> {
             if(view != null) {
                 view.removePiece(cell.getX(), cell.getY());
+            }
+        });
+
+        // Add the listener to promote pawns
+        board.setPromotePawnListener((pawn, cell) -> {
+            if(view != null) {
+                // Ask the user which piece he wants
+                ChessView.UserChoice choice = view.askUser("Promotion", "Choose a piece to promote your pawn",
+                        new ChessView.UserChoice() {
+                            @Override
+                            public String textValue() {
+                                return "Queen";
+                            }
+                        },
+                        new ChessView.UserChoice() {
+                            @Override
+                            public String textValue() {
+                                return "Rook";
+                            }
+                        },
+                        new ChessView.UserChoice() {
+                            @Override
+                            public String textValue() {
+                                return "Bishop";
+                            }
+                        },
+                        new ChessView.UserChoice() {
+                            @Override
+                            public String textValue() {
+                                return "Knight";
+                            }
+                        });
+
+                // Set the new piece
+                switch (choice.textValue()) {
+                    case "Queen":
+                        board.setPiece(new Queen(pawn.getColor()), cell.getX(), cell.getY());
+                        break;
+                    case "Rook":
+                        board.setPiece(new Rook(pawn.getColor()), cell.getX(), cell.getY());
+                        break;
+                    case "Bishop":
+                        board.setPiece(new Bishop(pawn.getColor()), cell.getX(), cell.getY());
+                        break;
+                    case "Knight":
+                        board.setPiece(new Knight(pawn.getColor()), cell.getX(), cell.getY());
+                        break;
+                }
             }
         });
 

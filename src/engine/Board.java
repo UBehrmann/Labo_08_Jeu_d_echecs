@@ -12,6 +12,7 @@ public class Board {
     }
     private PieceListener onAddPiece;
     private PieceListener onRemovePiece;
+    private PieceListener onPromotePiece;
     private int width;
     private int height;
     private Cell[][] cells;
@@ -165,6 +166,12 @@ public class Board {
         if(onAddPiece != null) {
             onAddPiece.action(piece, cells[x][y]);
         }
+
+        if(piece instanceof Pawn && (y == 0 || y == 7)) {
+            if(onPromotePiece != null) {
+                onPromotePiece.action(piece, cells[x][y]);
+            }
+        }
     }
 
     public void removePiece(int x, int y) {
@@ -191,6 +198,10 @@ public class Board {
 
     public void setRemovePieceListener(PieceListener listener) {
         this.onRemovePiece = listener;
+    }
+
+    public void setPromotePawnListener(PieceListener listener) {
+        this.onPromotePiece = listener;
     }
 
     public int getTurn() {
