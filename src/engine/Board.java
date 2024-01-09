@@ -42,6 +42,7 @@ public class Board {
         else {if(!piece.canMove(x1, x2, y1, y2)) return false;}
 
         // Check if the part eats another
+        //TODO a faire ...
 
         // do the movement
         movePiece(x1, y1, x2, y2);
