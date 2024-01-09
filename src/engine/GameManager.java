@@ -20,7 +20,20 @@ public class GameManager implements ChessController {
 
         StringBuilder message = new StringBuilder();
 
-        message.append("Turn: ");
+        // Add the current turn
+        message.append("Turn ").append(board.getTurn()).append(" : ");
+
+        // If the king is in checkmate
+        if(board.isCheckMate()){
+            message.append(" (Checkmate)");
+            message.append(board.getCurrentPlayer()).append(" player wins");
+        }else{
+            // Add the current player
+            message.append(board.getCurrentPlayer()).append(" player's turn");
+
+            // If the king is in check
+            message.append(board.isCheck() ? " (Check)" : "");
+        }
 
         // Update the message
         view.displayMessage(message.toString());
