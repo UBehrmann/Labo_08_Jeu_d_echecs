@@ -62,11 +62,40 @@ public class Board {
         turn++;
     }
 
-    public boolean isCheck( PlayerColor color ) {
-        return true;
+    public boolean isCheck() {
+
+        PlayerColor color = getCurrentPlayer();
+
+        // Find the king
+        Cell kingCell = findKing(color);
+
+        // Check if the king is in check
+        for(int i = 0; i < width; i++)
+            for(int j = 0; j < height; j++)
+                if(cells[i][j].getPiece() != null &&
+                   cells[i][j].getPiece().getColor() != color &&
+                   cells[i][j].getPiece().canMove(i, kingCell.getX(), j, kingCell.getY()))
+                    return true;
+
+        return false;
     }
 
-    public boolean isCheckMate( PlayerColor color ) {
+    public boolean isCheckMate() {
+
+        PlayerColor color = getCurrentPlayer();
+        Cell kingCell = findKing(color);
+
+        if(kingCell == null) return false;
+
+        // Check if the king is in check
+        if(!isCheck()) return false;
+
+        // Check if the king can move
+        for(int i = 0; i < width; i++)
+            for(int j = 0; j < height; j++)
+                if(kingCell.getPiece().canMove(kingCell.getX(), i, kingCell.getY(), j))
+                    return false;
+
         return true;
     }
 
@@ -87,7 +116,6 @@ public class Board {
         for(int i = 0; i < width; i++)
             for(int j = 0; j < height; j++)
                 cells[i][j] = new Cell(null, i, j);
-
     }
 
     public void initialize() {
@@ -120,7 +148,6 @@ public class Board {
         for ( int i = 0; i < 8; i++ ) {
             addPiece(new Pawn( PlayerColor.BLACK ), i, 6);
         }
-
     }
 
     public void addPiece(Piece piece, int x, int y) {
@@ -164,6 +191,22 @@ public class Board {
 
     public void setRemovePieceListener(PieceListener listener) {
         this.onRemovePiece = listener;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public boolean isFree(int x, int y) {
+        return cells[x][y].getPiece() == null;
+    }
+
+    private Cell findKing(PlayerColor color){
+        for(int i = 0; i < width; i++)
+            for(int j = 0; j < height; j++)
+                if(cells[i][j].getPiece() instanceof King && cells[i][j].getPiece().getColor() == color)
+                    return cells[i][j];
+        return null;
     }
 
 }
