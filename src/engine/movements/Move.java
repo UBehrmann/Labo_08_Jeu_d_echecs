@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Move {
-    HORIZONTAL, VERTICAL, DIAGONAL, SPECIAL;
+    HORIZONTAL, VERTICAL, DIAGONAL, SPECIAL, NONE;
 
     public static Map<Integer, Move> createAngleToDirectionMap() {
         Map<Integer, Move> angleToDirectionMap = new HashMap<>();

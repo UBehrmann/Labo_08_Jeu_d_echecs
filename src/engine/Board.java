@@ -1,8 +1,12 @@
 package engine;
 
 import chess.PlayerColor;
+import engine.movements.Coordinates;
+import engine.movements.Move;
+import engine.movements.Movement;
 import engine.pieces.*;
 
+import java.awt.*;
 import java.util.Objects;
 
 public class Board {
@@ -37,26 +41,37 @@ public class Board {
         // Check if the piece is the same color as the current player
         if(piece.getColor() != getCurrentPlayer()) return false;
 
+        // Define the inital and final position
+        PlayerColor playerColor = piece.getColor();
+        Coordinates positionInitial = new Coordinates(x1, playerColor == PlayerColor.BLACK ? y2 : y1);
+        Coordinates positionFinal = new Coordinates(x2, playerColor == PlayerColor.BLACK ? y2 : y1);
+
         // Check if the piece can move to the new position
-        if(piece.getColor() == PlayerColor.BLACK){if(!piece.canMove(x1, x2, y2, y1)) return false;}
-        else {if(!piece.canMove(x1, x2, y1, y2)) return false;}
+        if(piece.possibleMovement(positionInitial, positionFinal)) return false;
+
+        // Get possible movement
+        Coordinates[] possibleMovement = piece.getPossibleMovementCoordinates(this, positionInitial, positionFinal);
+
 
         // Check if the part eats another
+
+        //Recupéerer les coordonnée possible
+
         //TODO a faire ...
 
         // do the movement
-        movePiece(x1, y1, x2, y2);
+        movePiece(new Coordinates(x1, y1), new Coordinates(x2, y2));
 
         return true;
     }
 
-    private void movePiece(int x1, int y1, int x2, int y2) {
+    private void movePiece(Coordinates positionInitial, Coordinates positionFinal) {
 
-        Piece piece = cells[x1][y1].getPiece();
+        Piece piece = cells[positionInitial.getX()][positionInitial.getY()].getPiece();
 
-        removePiece(x1, y1);
+        removePiece(positionInitial);
 
-        setPiece(piece, x2, y2);
+        setPiece(piece, positionFinal);
 
         // Update the turn
         turn++;
@@ -94,63 +109,61 @@ public class Board {
 
         // Put the pieces on the board
         // White pieces
-        addPiece(new Rook( PlayerColor.WHITE ), 0, 0);
-        addPiece(new Knight( PlayerColor.WHITE ), 1, 0);
-        addPiece(new Bishop( PlayerColor.WHITE ), 2, 0);
-        addPiece(new Queen( PlayerColor.WHITE ), 3, 0);
-        addPiece(new King( PlayerColor.WHITE ), 4, 0);
-        addPiece(new Bishop( PlayerColor.WHITE ), 5, 0);
-        addPiece(new Knight( PlayerColor.WHITE ), 6, 0);
-        addPiece(new Rook( PlayerColor.WHITE ), 7, 0);
-
+        addPiece(new Rook( PlayerColor.WHITE ), new Coordinates(0, 0));
+        addPiece(new Knight( PlayerColor.WHITE ), new Coordinates(1, 0));
+        addPiece(new Bishop( PlayerColor.WHITE ), new Coordinates(2, 0));
+        addPiece(new Queen( PlayerColor.WHITE ), new Coordinates(3, 0));
+        addPiece(new King( PlayerColor.WHITE ), new Coordinates(4, 0));
+        addPiece(new Bishop( PlayerColor.WHITE ), new Coordinates(5, 0));
+        addPiece(new Knight( PlayerColor.WHITE ), new Coordinates(6, 0));
+        addPiece(new Rook( PlayerColor.WHITE ), new Coordinates(7, 0));
         for ( int i = 0; i < 8; i++ ) {
-            addPiece(new Pawn( PlayerColor.WHITE ), i, 1);
+            addPiece(new Pawn( PlayerColor.WHITE ), new Coordinates(i, 1));
         }
 
         // Black pieces
-        addPiece(new Rook( PlayerColor.BLACK ), 0, 7);
-        addPiece(new Knight( PlayerColor.BLACK ), 1, 7);
-        addPiece(new Bishop( PlayerColor.BLACK ), 2, 7);
-        addPiece(new Queen( PlayerColor.BLACK ), 3, 7);
-        addPiece(new King( PlayerColor.BLACK ), 4, 7);
-        addPiece(new Bishop( PlayerColor.BLACK ), 5, 7);
-        addPiece(new Knight( PlayerColor.BLACK ), 6, 7);
-        addPiece(new Rook( PlayerColor.BLACK ), 7, 7);
-
+        addPiece(new Rook( PlayerColor.BLACK ), new Coordinates(0, 7));
+        addPiece(new Knight( PlayerColor.BLACK ), new Coordinates(1, 7));
+        addPiece(new Bishop( PlayerColor.BLACK ), new Coordinates(2, 7));
+        addPiece(new Queen( PlayerColor.BLACK ), new Coordinates(3, 7));
+        addPiece(new King( PlayerColor.BLACK ), new Coordinates(4, 7));
+        addPiece(new Bishop( PlayerColor.BLACK ), new Coordinates(5, 7));
+        addPiece(new Knight( PlayerColor.BLACK ), new Coordinates(6, 7));
+        addPiece(new Rook( PlayerColor.BLACK ), new Coordinates(7, 7));
         for ( int i = 0; i < 8; i++ ) {
-            addPiece(new Pawn( PlayerColor.BLACK ), i, 6);
+            addPiece(new Pawn( PlayerColor.BLACK ), new Coordinates(i, 6));
         }
 
     }
 
-    public void addPiece(Piece piece, int x, int y) {
-        setPiece(piece, x, y);
+    public void addPiece(Piece piece, Coordinates position) {
+        setPiece(piece, position);
     }
 
-    public void setPiece(Piece piece, int x, int y) {
+    public void setPiece(Piece piece, Coordinates position) {
 
         Objects.requireNonNull(piece, "Piece cannot be null");
 
-        checkPositionOnBoard(x, y);
+        checkPositionOnBoard(position);
 
-        cells[x][y].setPiece(piece);
+        cells[position.getX()][position.getY()].setPiece(piece);
 
         if(onAddPiece != null) {
-            onAddPiece.action(piece, cells[x][y]);
+            onAddPiece.action(piece, cells[position.getX()][position.getY()]);
         }
     }
 
-    public void removePiece(int x, int y) {
-        checkPositionOnBoard(x, y);
-        cells[x][y].removePiece();
+    public void removePiece(Coordinates position) {
+        checkPositionOnBoard(position);
+        cells[position.getX()][position.getX()].removePiece();
 
         if(onRemovePiece != null) {
-            onRemovePiece.action(null, cells[x][y]);
+            onRemovePiece.action(null, cells[position.getX()][position.getX()]);
         }
     }
 
-    private void checkPositionOnBoard(int x, int y) {
-        if(x < 0 || x >= width || y < 0 || y >= height)
+    private void checkPositionOnBoard(Coordinates position) {
+        if(position.getX() < 0 || position.getX() >= width || position.getY() < 0 || position.getY() >= height)
             throw new IllegalArgumentException("Position out of board");
     }
 

@@ -2,6 +2,7 @@ package engine.pieces;
 
 import chess.PieceType;
 import chess.PlayerColor;
+import engine.Board;
 import engine.movements.*;
 
 public abstract class Piece {
@@ -39,11 +40,25 @@ public abstract class Piece {
             return color;
     }
 
-    public boolean canMove(int xInitial, int xFinal, int yInitial, int yFinal){
+    public boolean possibleMovement(Coordinates positionInitial, Coordinates positionFinal){
             for(Movement movement: this.movements){
-                if (movement.movementIsOk(xInitial, xFinal, yInitial, yFinal)) return true;
+                if (movement.movementIsOk(positionInitial, positionFinal)) return true;
             }
             return false;
+    }
+
+    private Movement getPossibleMovement(Coordinates positionInitial, Coordinates positionFinal){
+            for(Movement movement: this.movements){
+                if (movement.movementIsOk(positionInitial, positionFinal)) return movement;
+            }
+            return null;
+    }
+
+
+    public Coordinates[] getPossibleMovementCoordinates(Board board, Coordinates positionInitial, Coordinates positionFinal){
+        Movement possibleMovement = getPossibleMovement(positionInitial, positionFinal);
+        if(possibleMovement == null) return null;
+
     }
 }
 
