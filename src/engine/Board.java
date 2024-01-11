@@ -1,12 +1,11 @@
 package engine;
 
+import chess.PieceType;
 import chess.PlayerColor;
-import engine.movements.Coordinates;
-import engine.movements.Move;
-import engine.movements.Movement;
+import engine.utils.Coordinates;
 import engine.pieces.*;
 
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Board {
@@ -50,8 +49,7 @@ public class Board {
         if(piece.possibleMovement(positionInitial, positionFinal)) return false;
 
         // Get possible movement
-        Coordinates[] possibleMovement = piece.getPossibleMovementCoordinates(this, positionInitial, positionFinal);
-
+        ArrayList<Coordinates> possibleMovement = piece.getPossibleMovementCoordinates(positionInitial, positionFinal);
 
         // Check if the part eats another
 
@@ -60,7 +58,9 @@ public class Board {
         //TODO a faire ...
 
         // do the movement
+        if(piece.getType() == PieceType.PAWN) ((Pawn)piece).clearFirstMovement();
         movePiece(new Coordinates(x1, y1), new Coordinates(x2, y2));
+
 
         return true;
     }

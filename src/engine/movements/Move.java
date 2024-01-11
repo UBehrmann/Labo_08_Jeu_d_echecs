@@ -1,27 +1,58 @@
 package engine.movements;
 
-import java.util.HashMap;
+import engine.utils.BoardDimensions;
+import engine.utils.Coordinates;
+import engine.utils.Steps;
+
+import java.util.ArrayList;
 import java.util.Map;
 
-public enum Move {
-    HORIZONTAL, VERTICAL, DIAGONAL, SPECIAL, NONE;
+public class Move {
+    Direction direction;
+    int maxStep;
+    private static final Map<Direction, Steps>  DIRECTION_TO_STEPS   = Direction.createDirectionToSteps();
 
-    public static Map<Integer, Move> createAngleToDirectionMap() {
-        Map<Integer, Move> angleToDirectionMap = new HashMap<>();
 
-        int[] angleForHorizontalDirection   = {0, 180};
-        {for(int angle : angleForHorizontalDirection) angleToDirectionMap.put(angle, HORIZONTAL);}
+    public Move(Direction direction, int maxStep){
+        if(maxStep < 0) throw new RuntimeException("maxStep must be >= 0!");
+        this.direction  = direction;
+        this.maxStep    = maxStep;
+    }
 
-        int[] angleForVerticalDirection     = {90, 270};
-        {for(int angle : angleForVerticalDirection) angleToDirectionMap.put(angle, VERTICAL);}
+    public boolean moveAngleIsOk(int angleDegree){
+        if(DIRECTION_TO_STEPS.containsKey(this.direction)){
+            return DIRECTION_TO_STEPS.get(this.direction).angleIsOk(angleDegree);
+        }
+        return false;
+    }
+    public boolean moveStepIsOk(Coordinates positionInitial, Coordinates positionFinal){
+        ArrayList<Coordinates> stepsCoordinates = getMoveStepPossible(positionInitial, positionFinal);
+        if(stepsCoordinates == null) return false;
 
-        int[] angleForDiagonalDirection     = {45, 135, 225, 315};
-        {for(int angle : angleForDiagonalDirection) angleToDirectionMap.put(angle, DIAGONAL);}
+        for (Coordinates stepsCoordinate : stepsCoordinates) {
+            Coordinates nextStepCoordinates = Steps.nextStep(stepsCoordinate);
+            if (((positionInitial.getX() + nextStepCoordinates.getX()) == positionFinal.getX())
+                    && ((positionInitial.getY() + nextStepCoordinates.getY()) == positionFinal.getY())) return true;
+        }
+        return false;
+    }
 
-        //int[] angleForSpecialDirection      = {30, 60, 120, 150, 210, 240, 300, 330};
-        int[] angleForSpecialDirection      = {26, 63, 116, 153, 206, 243, 243, 296};
-        {for(int angle : angleForSpecialDirection) angleToDirectionMap.put(angle, SPECIAL);}
+    public ArrayList<Coordinates> getMoveStepPossible(Coordinates positionInitial, Coordinates positionFinal){
+        int angleDegree = (int)Coordinates.getAngle(positionInitial, positionFinal);
+        if(!moveAngleIsOk(angleDegree)) return null;
 
-        return angleToDirectionMap;
+        ArrayList<Coordinates> stepsCoordinates = DIRECTION_TO_STEPS.get(this.direction).getStepCoordinates(angleDegree);
+        if(stepsCoordinates.isEmpty()) return null;
+
+        ArrayList<Coordinates> coordinatesPossibleSteps = null;
+        for (Coordinates stepsCoordinate : stepsCoordinates) {
+            Coordinates nextStepCoordinates = Steps.nextStep(stepsCoordinate);
+            int x = positionInitial.getX() + nextStepCoordinates.getX();
+            int y = positionInitial.getY() + nextStepCoordinates.getY();
+
+            if ((Math.abs(y) < BoardDimensions.HEIGHT.getValue()) && (Math.abs(x) < BoardDimensions.WIDTH.getValue()))
+                coordinatesPossibleSteps.add(stepsCoordinate);
+        }
+        return coordinatesPossibleSteps;
     }
 }

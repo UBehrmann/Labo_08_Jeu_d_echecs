@@ -4,6 +4,9 @@ import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
 import engine.movements.*;
+import engine.utils.Coordinates;
+
+import java.util.ArrayList;
 
 public abstract class Piece {
     private PieceType type;
@@ -36,6 +39,10 @@ public abstract class Piece {
 
     }
 
+    protected void setMovements(Movement[] movements){
+        this.movements = movements;
+    }
+
     public PlayerColor getColor() {
             return color;
     }
@@ -55,10 +62,9 @@ public abstract class Piece {
     }
 
 
-    public Coordinates[] getPossibleMovementCoordinates(Board board, Coordinates positionInitial, Coordinates positionFinal){
-        Movement possibleMovement = getPossibleMovement(positionInitial, positionFinal);
-        if(possibleMovement == null) return null;
-
+    public ArrayList<Coordinates> getPossibleMovementCoordinates(Coordinates positionInitial, Coordinates positionFinal){
+        Movement movement = getPossibleMovement(positionInitial, positionFinal);
+        return movement != null ? movement.getMovementPossible(positionInitial, positionFinal) : null;
     }
 }
 

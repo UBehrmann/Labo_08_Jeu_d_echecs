@@ -2,17 +2,14 @@ package engine;
 
 import chess.ChessController;
 import chess.ChessView;
+import engine.utils.BoardDimensions;
 
 public class GameManager implements ChessController {
-
     private ChessView view;
-
     private Board board;
 
-    public static final int BOARD_SIZE = 8;
-
     public GameManager() {
-        this.board = new Board(BOARD_SIZE, BOARD_SIZE);
+        this.board = new Board(BoardDimensions.WIDTH.getValue(), BoardDimensions.HEIGHT.getValue());
     }
 
     private void updateMessage() {
