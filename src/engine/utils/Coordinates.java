@@ -50,4 +50,11 @@ public class Coordinates {
         int deltaY      = Coordinates.deltaY(positionInitial, positionFinal);
         return Math.toDegrees(Math.atan2(deltaY, deltaX));
     }
+    public static Coordinates addition(Coordinates c1, Coordinates c2){
+        return new Coordinates(c1.getX() + c2.getX(), c1.getY() + c2.getY());
+    }
+
+    public static boolean equal(Coordinates c1, Coordinates c2){
+        return (c1.getX() == c2.getX()) && (c1.getY() == c2.getY());
+    }
 }

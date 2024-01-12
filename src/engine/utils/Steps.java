@@ -39,10 +39,11 @@ public class Steps {
         }
         return false;
     }
-
     public ArrayList<Coordinates> getStepCoordinates(int angleDegree){
         return this.stepsCoordinates[Quadrant.coordinatesIsInQuadrant((double)angleDegree).getValue()];
     }
+
+
 
     public static Coordinates nextStep(Coordinates step){
         int x = step.getX();

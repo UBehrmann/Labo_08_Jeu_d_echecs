@@ -43,13 +43,13 @@ public class Board {
         // Define the inital and final position
         PlayerColor playerColor = piece.getColor();
         Coordinates positionInitial = new Coordinates(x1, playerColor == PlayerColor.BLACK ? y2 : y1);
-        Coordinates positionFinal = new Coordinates(x2, playerColor == PlayerColor.BLACK ? y2 : y1);
+        Coordinates positionFinal = new Coordinates(x2, playerColor == PlayerColor.BLACK ? y1 : y2);
 
         // Check if the piece can move to the new position
-        if(piece.possibleMovement(positionInitial, positionFinal)) return false;
+        if(!piece.possibleMovement(positionInitial, positionFinal)) return false;
 
         // Get possible movement
-        ArrayList<Coordinates> possibleMovement = piece.getPossibleMovementCoordinates(positionInitial, positionFinal);
+        ArrayList<Coordinates>[] possibleMovement = piece.getPossibleMovementCoordinates(positionInitial, positionFinal);
 
         // Check if the part eats another
 

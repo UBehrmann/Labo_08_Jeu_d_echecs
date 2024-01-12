@@ -62,7 +62,7 @@ public abstract class Piece {
     }
 
 
-    public ArrayList<Coordinates> getPossibleMovementCoordinates(Coordinates positionInitial, Coordinates positionFinal){
+    public ArrayList<Coordinates>[] getPossibleMovementCoordinates(Coordinates positionInitial, Coordinates positionFinal){
         Movement movement = getPossibleMovement(positionInitial, positionFinal);
         return movement != null ? movement.getMovementPossible(positionInitial, positionFinal) : null;
     }
