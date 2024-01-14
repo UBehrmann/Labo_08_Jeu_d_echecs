@@ -30,8 +30,18 @@ public class Board {
         reset();
     }
 
-    public boolean doMovement( int x1, int y1, int x2, int y2 ) {
+    public PlayerColor[][] getPositionOfPieceColors(){
+        PlayerColor[][] piecesColors = new PlayerColor[this.width][this.height];
+        for(int i = 0; i < this.width; ++i){
+            for(int j = 0; j < this.height; ++j){
+                Piece p = cells[i][j].getPiece();
+                piecesColors[i][j] = p != null ? p.getColor() : null;
+            }
+        }
+        return piecesColors;
+    }
 
+    public boolean doMovement( int x1, int y1, int x2, int y2 ) {
         // Check if the piece is on the board
         Piece piece = cells[x1][y1].getPiece();
 
@@ -41,24 +51,47 @@ public class Board {
         if(piece.getColor() != getCurrentPlayer()) return false;
 
         // Define the inital and final position
-        PlayerColor playerColor = piece.getColor();
-        Coordinates positionInitial = new Coordinates(x1, playerColor == PlayerColor.BLACK ? y2 : y1);
-        Coordinates positionFinal = new Coordinates(x2, playerColor == PlayerColor.BLACK ? y1 : y2);
+        Coordinates positionInitial = new Coordinates(x1, y1);
+        Coordinates positionFinal = new Coordinates(x2, y2);
+
+        // Check if there's an opponent's piece in the first diagonal step
+        if (Math.abs(x2 - x1) == 1 && Math.abs(y2 - y1) == 1) {
+            Piece targetPiece = cells[x2][y2].getPiece();
+            if (targetPiece != null && targetPiece.getColor() != piece.getColor()) {
+                // Perform diagonal capture
+                movePiece(positionInitial, positionFinal);
+                return true;
+            }
+        }
 
         // Check if the piece can move to the new position
-        if(!piece.possibleMovement(positionInitial, positionFinal)) return false;
+        if(!piece.movementIsOk(positionInitial, positionFinal)) return false;
 
-        // Get possible movement
-        ArrayList<Coordinates>[] possibleMovement = piece.getPossibleMovementCoordinates(positionInitial, positionFinal);
+        // get the position of the pieces' colors on the board
+        PlayerColor[][] piecesColors = getPositionOfPieceColors();
 
-        // Check if the part eats another
+        // get the possible movement of the part from the initial to the final position
+        // **the possible movement is a sequence of coordinates following a step from the initial position to the final position.
+        Coordinates[] movementPiece = piece.getPossibleMovement(positionInitial, positionFinal);
 
-        //Recupéerer les coordonnée possible
+        // position initial -> ... -> position final -> ... -> Max step
+        for(Coordinates positionPiece : movementPiece){
+            //If there is a piece of the same color as the one making the last move to the final position, the move is considered forbidden.
+            // Otherwise (if there is a piece of a different color or no piece at all), control stops, and the move is allowed.
+            if(Coordinates.equal(positionPiece, positionFinal)){
+                if(piecesColors[positionPiece.getX()][positionPiece.getY()] == piece.getColor()) return false;
+                break;
+            }
 
-        //TODO a faire ...
+            // If, while traversing the movement and we have not yet reached the final position, there is a piece,
+            // regardless of its color, present (obstacle), then the move is prohibited.
+            if (piecesColors[positionPiece.getX()][positionPiece.getY()] != null) return false;
+        }
+
+        // After the pawn's first move, change its maximum step to 1 instead of 2
+        if(piece.getType() == PieceType.PAWN) ((Pawn)piece).clearFirstMovement();
 
         // do the movement
-        if(piece.getType() == PieceType.PAWN) ((Pawn)piece).clearFirstMovement();
         movePiece(new Coordinates(x1, y1), new Coordinates(x2, y2));
 
 
@@ -155,10 +188,10 @@ public class Board {
 
     public void removePiece(Coordinates position) {
         checkPositionOnBoard(position);
-        cells[position.getX()][position.getX()].removePiece();
+        cells[position.getX()][position.getY()].removePiece();
 
         if(onRemovePiece != null) {
-            onRemovePiece.action(null, cells[position.getX()][position.getX()]);
+            onRemovePiece.action(null, cells[position.getX()][position.getY()]);
         }
     }
 
