@@ -5,8 +5,6 @@ import chess.PlayerColor;
 import engine.movements.*;
 import engine.utils.Coordinates;
 
-import java.util.ArrayList;
-
 public abstract class Piece {
     private PieceType type;
     private PlayerColor color;
@@ -41,13 +39,13 @@ public abstract class Piece {
         Step possibleStep = this.movements.getPossibleStep(positionInitial, positionFinal);
         if(possibleStep == null) return null;
 
-        Coordinates[] possibleStepCoordinates = possibleStep.getSteps();
-        if(possibleStepCoordinates == null) return null;
+        Coordinates[] possibleMouvement = possibleStep.getMouvement();
+        if(possibleMouvement == null) return null;
 
-        Coordinates[] c = new Coordinates[possibleStepCoordinates.length];
-        for(int i = 0; i < possibleStepCoordinates.length; ++i) c[i] = new Coordinates(Coordinates.addition(possibleStepCoordinates[i], positionInitial));
+        Coordinates[] m = new Coordinates[possibleMouvement.length];
+        for(int i = 0; i < possibleMouvement.length; ++i) m[i] = new Coordinates(Coordinates.addition(possibleMouvement[i], positionInitial));
 
-        return c;
+        return m;
     }
     public boolean movementIsOk(Coordinates positionInitial, Coordinates positionFinal){
         Coordinates[] possibleMovement = getPossibleMovement(positionInitial, positionFinal);

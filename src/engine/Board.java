@@ -35,11 +35,15 @@ public class Board {
         PlayerColor[][] piecesColors = new PlayerColor[this.width][this.height];
         for(int i = 0; i < this.width; ++i){
             for(int j = 0; j < this.height; ++j){
-                Piece p = cells[i][j].getPiece();
+                Piece p = getPieceInBoard(new Coordinates(i, j));
                 piecesColors[i][j] = p != null ? p.getColor() : null;
             }
         }
         return piecesColors;
+    }
+
+    public Piece getPieceInBoard(Coordinates positionInBoard){
+        return cells[positionInBoard.getX()][positionInBoard.getY()].getPiece();
     }
 
     public boolean doMovement( int x1, int y1, int x2, int y2 ) {
@@ -57,7 +61,7 @@ public class Board {
 
         // Check if there's an opponent's piece in the first diagonal step
         if (Math.abs(x2 - x1) == 1 && Math.abs(y2 - y1) == 1) {
-            Piece targetPiece = cells[x2][y2].getPiece();
+            Piece targetPiece = getPieceInBoard(new Coordinates(x2, y2));
             if (targetPiece != null && targetPiece.getColor() != piece.getColor()) {
                 // Perform diagonal capture
                 movePiece(positionInitial, positionFinal);
@@ -112,39 +116,42 @@ public class Board {
     }
 
     public boolean isCheck() {
-
         PlayerColor color = getCurrentPlayer();
 
         // Find the king
         Cell kingCell = findKing(color);
+        if(kingCell == null) return false;
+        Coordinates positionKing = new Coordinates(kingCell.getX(), kingCell.getY());
 
         // Check if the king is in check
-        for(int i = 0; i < width; i++)
-            for(int j = 0; j < height; j++)
-                if(cells[i][j].getPiece() != null &&
-                   cells[i][j].getPiece().getColor() != color &&
-                   cells[i][j].getPiece().canMove(i, kingCell.getX(), j, kingCell.getY()))
-                    return true;
-
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                Coordinates positionPiece = new Coordinates(i, j);
+                Piece piece = getPieceInBoard(positionPiece);
+                if(piece != null && piece.getColor() != color && piece.movementIsOk(positionPiece, positionKing)) return true;
+            }
+        }
         return false;
     }
 
     public boolean isCheckMate() {
-
         PlayerColor color = getCurrentPlayer();
-        Cell kingCell = findKing(color);
 
+        // Find the king
+        Cell kingCell = findKing(color);
         if(kingCell == null) return false;
+        Coordinates positionKing = new Coordinates(kingCell.getX(), kingCell.getY());
 
         // Check if the king is in check
         if(!isCheck()) return false;
 
         // Check if the king can move
-        for(int i = 0; i < width; i++)
-            for(int j = 0; j < height; j++)
-                if(kingCell.getPiece().canMove(kingCell.getX(), i, kingCell.getY(), j))
-                    return false;
-
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                Coordinates positionPiece = new Coordinates(i, j);
+                if(kingCell.getPiece().movementIsOk(positionKing, positionPiece)) return false;
+            }
+        }
         return true;
     }
 
@@ -213,9 +220,9 @@ public class Board {
             onAddPiece.action(piece, cells[position.getX()][position.getY()]);
         }
 
-        if(piece instanceof Pawn && (y == 0 || y == 7)) {
+        if(piece instanceof Pawn && (position.getY() == 0 || position.getY() == 7)) {
             if(onPromotePiece != null) {
-                onPromotePiece.action(piece, cells[x][y]);
+                onPromotePiece.action(piece, cells[position.getX()][position.getY()]);
             }
         }
     }

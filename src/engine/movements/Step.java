@@ -4,7 +4,7 @@ import engine.utils.Coordinates;
 
 public class Step {
     Coordinates coordinates;
-    Coordinates[] steps;
+    Coordinates[] mouvement;
     double stepAngleDegree;
 
     public Step(Coordinates step, int maxStep, boolean invertOrdinateAxis, boolean invertAbscissaAxis){
@@ -17,8 +17,8 @@ public class Step {
         Coordinates originCoordinates = new Coordinates(0,0);
         this.stepAngleDegree  = Coordinates.getAngleDegree(originCoordinates, this.coordinates);
 
-        this.steps = new Coordinates[maxStep];
-        for(int i = 0; i < this.steps.length; ++i) this.steps[i] = nextStep(i);
+        this.mouvement = new Coordinates[maxStep];
+        for(int i = 0; i < this.mouvement.length; ++i) this.mouvement[i] = nextStep(i);
 
     }
 
@@ -34,11 +34,7 @@ public class Step {
         return this.stepAngleDegree == stepAngleDegree;
     }
 
-    public Coordinates[] getSteps() {
-        return this.steps;
-    }
-
-    public int getMaxStep(){
-        return this.steps.length;
+    public Coordinates[] getMouvement() {
+        return this.mouvement;
     }
 }
