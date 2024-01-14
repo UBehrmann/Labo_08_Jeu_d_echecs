@@ -170,8 +170,10 @@ public class Board {
 
         // Remove all pieces from the board
         for(int i = 0; i < width; i++)
-            for(int j = 0; j < height; j++)
+            for(int j = 0; j < height; j++){
                 cells[i][j] = new Cell(null, i, j);
+                removePiece(new Coordinates(i, j));
+            }
     }
 
     public void initialize() {

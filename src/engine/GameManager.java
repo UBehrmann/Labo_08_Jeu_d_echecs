@@ -7,8 +7,8 @@ import engine.pieces.*;
 import engine.utils.Coordinates;
 
 public class GameManager implements ChessController {
-    private ChessView view;
-    private Board board;
+    protected ChessView view;
+    protected Board board;
 
     public GameManager() {
         this.board = new Board(BoardDimensions.WIDTH.getValue(), BoardDimensions.HEIGHT.getValue());
@@ -102,7 +102,6 @@ public class GameManager implements ChessController {
                 }
             }
         });
-
     }
 
     @Override
@@ -141,11 +140,9 @@ public class GameManager implements ChessController {
         board.reset();
 
         // Put the pieces on the board
-        board.initialize();board.initialize();
+        board.initialize();
 
         // Update the message
         updateMessage();
     }
-
-
 }
