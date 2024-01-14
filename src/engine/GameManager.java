@@ -2,18 +2,16 @@ package engine;
 
 import chess.ChessController;
 import chess.ChessView;
+import engine.utils.BoardDimensions;
 import engine.pieces.*;
+import engine.utils.Coordinates;
 
 public class GameManager implements ChessController {
-
     private ChessView view;
-
     private Board board;
 
-    public static final int BOARD_SIZE = 8;
-
     public GameManager() {
-        this.board = new Board(BOARD_SIZE, BOARD_SIZE);
+        this.board = new Board(BoardDimensions.WIDTH.getValue(), BoardDimensions.HEIGHT.getValue());
     }
 
     private void updateMessage() {
@@ -86,19 +84,20 @@ public class GameManager implements ChessController {
                             }
                         });
 
+                Coordinates coordinates = new Coordinates(cell.getX(), cell.getY());
                 // Set the new piece
                 switch (choice.textValue()) {
                     case "Queen":
-                        board.setPiece(new Queen(pawn.getColor()), cell.getX(), cell.getY());
+                        board.setPiece(new Queen(pawn.getColor()), coordinates);
                         break;
                     case "Rook":
-                        board.setPiece(new Rook(pawn.getColor()), cell.getX(), cell.getY());
+                        board.setPiece(new Rook(pawn.getColor()), coordinates);
                         break;
                     case "Bishop":
-                        board.setPiece(new Bishop(pawn.getColor()), cell.getX(), cell.getY());
+                        board.setPiece(new Bishop(pawn.getColor()), coordinates);
                         break;
                     case "Knight":
-                        board.setPiece(new Knight(pawn.getColor()), cell.getX(), cell.getY());
+                        board.setPiece(new Knight(pawn.getColor()), coordinates);
                         break;
                 }
             }

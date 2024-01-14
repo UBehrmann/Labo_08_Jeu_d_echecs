@@ -3,47 +3,59 @@ package engine.pieces;
 import chess.PieceType;
 import chess.PlayerColor;
 import engine.movements.*;
+import engine.utils.Coordinates;
 
 public abstract class Piece {
     private PieceType type;
     private PlayerColor color;
-    private Movement[] movements;
+    private Movements movements;
     private boolean hasMoved;
 
-    public Piece(PieceType type, PlayerColor color, Movement[] movements) {
+
+    public Piece(PieceType type, PlayerColor color, Movements movements) {
+        if (type == null) throw new IllegalArgumentException("Piece type cannot be null");
+        if (color == null) throw new IllegalArgumentException("Player color cannot be null");
+        if (movements == null) throw new IllegalArgumentException("Movements cannot be null");
+
         this.type = type;
         this.color = color;
         this.movements = movements;
     }
 
+
+    protected void setMovements(Movements movements){
+        this.movements = movements;
+    }
+
+
     public PieceType getType() {
-
-        if(this instanceof Pawn)
-            return PieceType.PAWN;
-        else if(this instanceof Rook)
-            return PieceType.ROOK;
-        else if(this instanceof Knight)
-            return PieceType.KNIGHT;
-        else if(this instanceof Bishop)
-            return PieceType.BISHOP;
-        else if(this instanceof Queen)
-            return PieceType.QUEEN;
-        else if(this instanceof King)
-            return PieceType.KING;
-        else
-            return null;
+        return this.type;
 
     }
-
     public PlayerColor getColor() {
-            return color;
+        return color;
+    }
+    public Coordinates[] getPossibleMovement(Coordinates positionInitial, Coordinates positionFinal){
+        Step possibleStep = this.movements.getPossibleStep(positionInitial, positionFinal);
+        if(possibleStep == null) return null;
+
+        Coordinates[] possibleMouvement = possibleStep.getMouvement();
+        if(possibleMouvement == null) return null;
+
+        Coordinates[] m = new Coordinates[possibleMouvement.length];
+        for(int i = 0; i < possibleMouvement.length; ++i) m[i] = new Coordinates(Coordinates.addition(possibleMouvement[i], positionInitial));
+
+        return m;
+    }
+    public boolean movementIsOk(Coordinates positionInitial, Coordinates positionFinal){
+        Coordinates[] possibleMovement = getPossibleMovement(positionInitial, positionFinal);
+        if(possibleMovement == null) return false;
+
+        for(Coordinates c : possibleMovement){
+            if(Coordinates.equal(c,positionFinal)) return true;
+        }
+        return false;
     }
 
-    public boolean canMove(int xInitial, int xFinal, int yInitial, int yFinal){
-            for(Movement movement: this.movements){
-                if (movement.movementIsOk(xInitial, xFinal, yInitial, yFinal)) return true;
-            }
-            return false;
-    }
 }
 
