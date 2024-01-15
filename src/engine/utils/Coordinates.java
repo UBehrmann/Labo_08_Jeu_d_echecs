@@ -23,9 +23,6 @@ public class Coordinates {
         Coordinates c = addition(this, coordinates);
         setCoordinates(c.getX(), c.getY());
     }
-
-
-
     public void setX(int x){
         this.x = x;
     }
@@ -38,8 +35,6 @@ public class Coordinates {
     public int getY(){
         return this.y;
     }
-
-
 
     public static int deltaY(Coordinates positionInitial, Coordinates positionFinal){
         return positionFinal.y - positionInitial.y;

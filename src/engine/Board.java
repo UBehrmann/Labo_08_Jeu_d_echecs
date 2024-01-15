@@ -2,6 +2,7 @@ package engine;
 
 import chess.PieceType;
 import chess.PlayerColor;
+import engine.utils.Cell;
 import engine.utils.Coordinates;
 import engine.pieces.*;
 

@@ -6,11 +6,9 @@ import engine.movements.*;
 import engine.utils.Coordinates;
 
 public abstract class Piece {
-    private PieceType type;
-    private PlayerColor color;
+    private final PieceType type;
+    private final PlayerColor color;
     private Movements movements;
-    private boolean hasMoved;
-
 
     public Piece(PieceType type, PlayerColor color, Movements movements) {
         if (type == null) throw new IllegalArgumentException("Piece type cannot be null");
@@ -21,7 +19,6 @@ public abstract class Piece {
         this.color = color;
         this.movements = movements;
     }
-
 
     protected void setMovements(Movements movements){
         this.movements = movements;
@@ -39,11 +36,11 @@ public abstract class Piece {
         Step possibleStep = this.movements.getPossibleStep(positionInitial, positionFinal);
         if(possibleStep == null) return null;
 
-        Coordinates[] possibleMouvement = possibleStep.getMouvement();
-        if(possibleMouvement == null) return null;
+        Coordinates[] possibleMovement = possibleStep.getMovement();
+        if(possibleMovement == null) return null;
 
-        Coordinates[] m = new Coordinates[possibleMouvement.length];
-        for(int i = 0; i < possibleMouvement.length; ++i) m[i] = new Coordinates(Coordinates.addition(possibleMouvement[i], positionInitial));
+        Coordinates[] m = new Coordinates[possibleMovement.length];
+        for(int i = 0; i < possibleMovement.length; ++i) m[i] = new Coordinates(Coordinates.addition(possibleMovement[i], positionInitial));
 
         return m;
     }
@@ -56,6 +53,4 @@ public abstract class Piece {
         }
         return false;
     }
-
 }
-
