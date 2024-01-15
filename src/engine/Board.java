@@ -5,7 +5,6 @@ import chess.PlayerColor;
 import engine.utils.Coordinates;
 import engine.pieces.*;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Board {
@@ -16,9 +15,9 @@ public class Board {
     private PieceListener onAddPiece;
     private PieceListener onRemovePiece;
     private PieceListener onPromotePiece;
-    private int width;
-    private int height;
-    private Cell[][] cells;
+    private final int width;
+    private final int height;
+    private final Cell[][] cells;
     private int turn = 1;
 
     public Board(int width, int height) {
@@ -55,7 +54,7 @@ public class Board {
         // Check if the piece is the same color as the current player
         if(piece.getColor() != getCurrentPlayer()) return false;
 
-        // Define the inital and final position
+        // Define the initial and final position
         Coordinates positionInitial = new Coordinates(x1, y1);
         Coordinates positionFinal = new Coordinates(x2, y2);
 
@@ -82,13 +81,13 @@ public class Board {
         // position initial -> ... -> position final -> ... -> Max step
         for(Coordinates positionPiece : movementPiece){
             //If there is a piece of the same color as the one making the last move to the final position, the move is considered forbidden.
-            // Otherwise (if there is a piece of a different color or no piece at all), control stops, and the move is allowed.
+            // Otherwise, (if there is a piece of a different color or no piece at all), control stops, and the move is allowed.
             if(Coordinates.equal(positionPiece, positionFinal)){
                 if(piecesColors[positionPiece.getX()][positionPiece.getY()] == piece.getColor()) return false;
                 break;
             }
 
-            // If, while traversing the movement and we have not yet reached the final position, there is a piece,
+            // If, while traversing the movement, and we have not yet reached the final position, there is a piece,
             // regardless of its color, present (obstacle), then the move is prohibited.
             if (piecesColors[positionPiece.getX()][positionPiece.getY()] != null) return false;
         }
@@ -96,9 +95,11 @@ public class Board {
         // After the pawn's first move, change its maximum step to 1 instead of 2
         if(piece.getType() == PieceType.PAWN) ((Pawn)piece).clearFirstMovement();
 
+        // If the piece is a king, and he would be in check after the movement, the movement is prohibited
+        if(piece.getType() == PieceType.KING && testCheck(positionFinal, piece.getColor()) ) return false;
+
         // do the movement
         movePiece(new Coordinates(x1, y1), new Coordinates(x2, y2));
-
 
         return true;
     }
@@ -123,6 +124,10 @@ public class Board {
         if(kingCell == null) return false;
         Coordinates positionKing = new Coordinates(kingCell.getX(), kingCell.getY());
 
+        return testCheck(positionKing, color);
+    }
+
+    public boolean testCheck(Coordinates positionKing, PlayerColor color){
         // Check if the king is in check
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
@@ -131,6 +136,7 @@ public class Board {
                 if(piece != null && piece.getColor() != color && piece.movementIsOk(positionPiece, positionKing)) return true;
             }
         }
+
         return false;
     }
 
@@ -152,6 +158,7 @@ public class Board {
                 if(kingCell.getPiece().movementIsOk(positionKing, positionPiece)) return false;
             }
         }
+
         return true;
     }
 
@@ -161,9 +168,6 @@ public class Board {
 
     public boolean isDraw() {
         return true;
-    }
-
-    public void promote( Piece piece ) {
     }
 
     public void reset() {
@@ -264,10 +268,6 @@ public class Board {
 
     public int getTurn() {
         return turn;
-    }
-
-    public boolean isFree(int x, int y) {
-        return cells[x][y].getPiece() == null;
     }
 
     private Cell findKing(PlayerColor color){
