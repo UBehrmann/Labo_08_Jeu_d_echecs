@@ -47,10 +47,10 @@ public class Board {
         // Check if the piece is on the board
         Piece piece = cells[x1][y1].getPiece();
 
-        if (piece == null) return false;
-
-        // Check if the piece is the same color as the current player
-        if (piece.getColor() != getCurrentPlayer()) return false;
+        // Check if the piece isn't null and if it is the same color as the
+        // current player
+        if (piece == null || piece.getColor() != getCurrentPlayer())
+            return false;
 
         // Define the initial and final position
         Coordinates positionInitial = new Coordinates(x1, y1);
@@ -90,20 +90,22 @@ public class Board {
                 return false;
         }
 
-        // If the piece is a king, and he would be in check after the movement,
-        // the movement is prohibited
-        if (piece.getType() == PieceType.KING && testCheck(positionFinal,
-                piece.getColor()))
-            return false;
-
-        // If the king is castling, check if the rook is in the correct position
-        // and if it is the first movement of the king and the rook
-        if (piece.getType() == PieceType.KING && piece.isFirstMovement())
-            castling(positionFinal);
+        // King special movements
+        if (piece.getType() == PieceType.KING) {
+            // If the piece is a king, and he would be in check after the
+            // movement,
+            // the movement is prohibited
+            if (testCheck(positionFinal, piece.getColor())) return false;
+            // If the king is castling, check if the rook is in the correct
+            // position
+            // and if it is the first movement of the king and the rook
+            if (piece.isFirstMovement()) castling(positionFinal);
+        }
 
         // If the piece is a pawn, and it takes a piece in the "en passant"
         // movement, remove the piece
-        if (piece.getType() == PieceType.PAWN && Math.abs(x2 - x1) == 1 && Math.abs(y2 - y1) == 1) {
+        if (piece.getType() == PieceType.PAWN && Math.abs(x2 - x1) == 1 &&
+                Math.abs(y2 - y1) == 1) {
             if (getPieceInBoard(new Coordinates(x2, y1)) != null) {
                 removePiece(new Coordinates(x2, y1));
             } else if (getPieceInBoard(new Coordinates(x2, y2)) == null) {
@@ -118,17 +120,26 @@ public class Board {
     }
 
     private void castling(Coordinates positionFinal) {
+
         // Check if the rook is in the correct position
         if (positionFinal.getX() == 2 || positionFinal.getX() == 6) {
+
             // Check if it is the first movement of the king and the rook
-            if (getPieceInBoard(new Coordinates(positionFinal.getX() == 2 ? 0 : 7, positionFinal.getY())).isFirstMovement()) {
+            if (getPieceInBoard(
+                    new Coordinates(positionFinal.getX() == 2 ? 0 : 7,
+                            positionFinal.getY())).isFirstMovement()) {
+
                 // Check if there is a piece between the king and the rook
-                if (getPieceInBoard(new Coordinates(positionFinal.getX() == 2 ? 1 : 5, positionFinal.getY())) == null) {
+                if (getPieceInBoard(
+                        new Coordinates(positionFinal.getX() == 2 ? 1 : 5,
+                                positionFinal.getY())) == null) {
+
                     // Move the rook
-                    movePiece(new Coordinates(positionFinal.getX() == 2 ? 0 :
-                                    7, positionFinal.getY()),
-                            new Coordinates(positionFinal.getX() == 2 ? 3 : 5
-                                    , positionFinal.getY()));
+                    movePiece(new Coordinates(positionFinal.getX() == 2 ? 0 :7,
+                                    positionFinal.getY()),
+                            new Coordinates(positionFinal.getX() == 2 ? 3 : 5,
+                                    positionFinal.getY()));
+
                     // Decrease the turn counter because the rook is moved
                     turn--;
                 }
@@ -170,7 +181,8 @@ public class Board {
             for (int j = 0; j < height; j++) {
                 Coordinates positionPiece = new Coordinates(i, j);
                 Piece piece = getPieceInBoard(positionPiece);
-                if (piece != null && piece.getColor() != color && piece.movementIsOk(positionPiece, positionKing))
+                if (piece != null && piece.getColor() != color &&
+                        piece.movementIsOk(positionPiece, positionKing))
                     return true;
             }
         }
@@ -270,7 +282,8 @@ public class Board {
             onAddPiece.action(piece, cells[position.getX()][position.getY()]);
         }
 
-        if (piece instanceof Pawn && (position.getY() == 0 || position.getY() == 7)) {
+        if (piece instanceof Pawn && (position.getY() == 0 ||
+                position.getY() == 7)) {
             if (onPromotePiece != null) {
                 onPromotePiece.action(piece,
                         cells[position.getX()][position.getY()]);
@@ -315,7 +328,8 @@ public class Board {
     private Cell findKing(PlayerColor color) {
         for (int i = 0; i < width; i++)
             for (int j = 0; j < height; j++)
-                if (cells[i][j].getPiece() instanceof King && cells[i][j].getPiece().getColor() == color)
+                if (cells[i][j].getPiece() instanceof King &&
+                        cells[i][j].getPiece().getColor() == color)
                     return cells[i][j];
         return null;
     }
