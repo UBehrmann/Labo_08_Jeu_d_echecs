@@ -174,6 +174,9 @@ public class Board {
                 cells[i][j] = new Cell(null, i, j);
                 removePiece(new Coordinates(i, j));
             }
+
+        // Reset the turn counter
+        turn = 1;
     }
 
     public void initialize() {

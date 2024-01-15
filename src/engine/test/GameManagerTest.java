@@ -26,16 +26,53 @@ public class GameManagerTest extends GameManager {
 
         // Ask the player which test he wants to do
         ChessView.UserChoice test = view.askUser("Tests", "Quelles tests voulez vous faire?",
+
                 new ChessView.UserChoice() {
                     @Override
                     public String textValue() {
-                        return "Test 1";
+                        return "Test pawns";
                     }
                 },
                 new ChessView.UserChoice() {
                     @Override
                     public String textValue() {
-                        return "Test pawns";
+                        return "Test Rook";
+                    }
+                },
+                new ChessView.UserChoice() {
+                    @Override
+                    public String textValue() {
+                        return "Test Bishop";
+                    }
+                },
+                new ChessView.UserChoice() {
+                    @Override
+                    public String textValue() {
+                        return "Test Knight";
+                    }
+                },
+                new ChessView.UserChoice() {
+                    @Override
+                    public String textValue() {
+                        return "Test Queen";
+                    }
+                },
+                new ChessView.UserChoice() {
+                    @Override
+                    public String textValue() {
+                        return "Test King";
+                    }
+                },
+                new ChessView.UserChoice() {
+                    @Override
+                    public String textValue() {
+                        return "Test check";
+                    }
+                },
+                new ChessView.UserChoice() {
+                    @Override
+                    public String textValue() {
+                        return "Test castling";
                     }
                 }
         );
@@ -44,11 +81,29 @@ public class GameManagerTest extends GameManager {
             return;
 
         switch (test.textValue()) {
-            case "Test 1":
-                ((BoardTest) board).setTest1();
-                break;
             case "Test pawns":
                 ((BoardTest) board).setTestPawn();
+                break;
+            case "Test Rook":
+                ((BoardTest) board).setTestRook();
+                break;
+            case "Test Bishop":
+                ((BoardTest) board).setTestBishop();
+                break;
+            case "Test Knight":
+                ((BoardTest) board).setTestKnight();
+                break;
+            case "Test Queen":
+                ((BoardTest) board).setTestQueen();
+                break;
+            case "Test King":
+                ((BoardTest) board).setTestKing();
+                break;
+            case "Test check":
+                ((BoardTest) board).setTestCheck();
+                break;
+            case "Test castling":
+                ((BoardTest) board).setTestCastling();
                 break;
         }
     }
