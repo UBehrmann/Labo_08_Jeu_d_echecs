@@ -98,8 +98,8 @@ public class Board {
 
         // If the king is castling, check if the rook is in the correct position
         // and if it is the first movement of the king and the rook
-        if (piece.getType() == PieceType.KING && ((King) piece).isFirstMovement())
-            castling(piece, positionInitial, positionFinal);
+        if (piece.getType() == PieceType.KING && piece.isFirstMovement())
+            castling(positionFinal);
 
         // If the piece is a pawn, and it takes a piece in the "en passant"
         // movement, remove the piece
@@ -117,12 +117,11 @@ public class Board {
         return true;
     }
 
-    private void castling(Piece piece, Coordinates positionInitial,
-                          Coordinates positionFinal) {
+    private void castling(Coordinates positionFinal) {
         // Check if the rook is in the correct position
         if (positionFinal.getX() == 2 || positionFinal.getX() == 6) {
             // Check if it is the first movement of the king and the rook
-            if (((Rook) getPieceInBoard(new Coordinates(positionFinal.getX() == 2 ? 0 : 7, positionFinal.getY()))).isFirstMovement()) {
+            if (getPieceInBoard(new Coordinates(positionFinal.getX() == 2 ? 0 : 7, positionFinal.getY())).isFirstMovement()) {
                 // Check if there is a piece between the king and the rook
                 if (getPieceInBoard(new Coordinates(positionFinal.getX() == 2 ? 1 : 5, positionFinal.getY())) == null) {
                     // Move the rook
