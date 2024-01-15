@@ -11,11 +11,12 @@ public class GameManager implements ChessController {
     protected Board board;
 
     public GameManager() {
-        this.board = new Board(BoardDimensions.WIDTH.getValue(), BoardDimensions.HEIGHT.getValue());
+        this.board = new Board(BoardDimensions.WIDTH.getValue(),
+                BoardDimensions.HEIGHT.getValue());
     }
 
     private void updateMessage() {
-        if(view == null || board == null) return;
+        if (view == null || board == null) return;
 
         StringBuilder message = new StringBuilder();
 
@@ -23,10 +24,10 @@ public class GameManager implements ChessController {
         message.append("Turn ").append(board.getTurn()).append(" : ");
 
         // If the king is in checkmate
-        if(board.isCheckMate()){
+        if (board.isCheckMate()) {
             message.append(" (Checkmate)");
             message.append(board.getCurrentPlayer()).append(" player wins");
-        }else{
+        } else {
             // Add the current player
             message.append(board.getCurrentPlayer()).append(" player's turn");
 
@@ -38,33 +39,36 @@ public class GameManager implements ChessController {
         view.displayMessage(message.toString());
     }
 
-    private  void initListeners() {
+    private void initListeners() {
 
         // Add the listener to add pieces
         board.setAddPieceListener((piece, cell) -> {
-            if(view != null) {
-                view.putPiece(piece.getType(), piece.getColor(), cell.getX(), cell.getY());
+            if (view != null) {
+                view.putPiece(piece.getType(), piece.getColor(), cell.getX(),
+                        cell.getY());
             }
         });
 
         // Add the listener to remove pieces
         board.setRemovePieceListener((piece, cell) -> {
-            if(view != null) {
+            if (view != null) {
                 view.removePiece(cell.getX(), cell.getY());
             }
         });
 
         // Add the listener to promote pawns
         board.setPromotePawnListener((pawn, cell) -> {
-            if(view != null) {
+            if (view != null) {
                 // Ask the user which piece he wants
-                ChessView.UserChoice choice = view.askUser("Promotion", "Choose a piece to promote your pawn",
+                ChessView.UserChoice choice = view.askUser("Promotion",
+                        "Choose a piece to promote your pawn",
                         () -> "Queen",
                         () -> "Rook",
                         () -> "Bishop",
                         () -> "Knight");
 
-                Coordinates coordinates = new Coordinates(cell.getX(), cell.getY());
+                Coordinates coordinates = new Coordinates(cell.getX(),
+                        cell.getY());
                 // Set the new piece
                 switch (choice.textValue()) {
                     case "Queen":
@@ -74,10 +78,12 @@ public class GameManager implements ChessController {
                         board.setPiece(new Rook(pawn.getColor()), coordinates);
                         break;
                     case "Bishop":
-                        board.setPiece(new Bishop(pawn.getColor()), coordinates);
+                        board.setPiece(new Bishop(pawn.getColor()),
+                                coordinates);
                         break;
                     case "Knight":
-                        board.setPiece(new Knight(pawn.getColor()), coordinates);
+                        board.setPiece(new Knight(pawn.getColor()),
+                                coordinates);
                         break;
                 }
             }

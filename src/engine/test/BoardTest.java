@@ -15,7 +15,7 @@ public class BoardTest extends Board {
     /**
      * Set the board to test the pawn movement and attack
      */
-    public void setTestPawn(){
+    public void setTestPawn() {
         addPiece(new Pawn(PlayerColor.WHITE), new Coordinates(4, 1));
         addPiece(new Pawn(PlayerColor.BLACK), new Coordinates(3, 2));
     }
@@ -23,7 +23,7 @@ public class BoardTest extends Board {
     /**
      * Set the board to test the knight movement
      */
-    public void setTestKnight(){
+    public void setTestKnight() {
         addPiece(new Knight(PlayerColor.WHITE), new Coordinates(4, 1));
         addPiece(new Knight(PlayerColor.BLACK), new Coordinates(3, 2));
     }
@@ -31,7 +31,7 @@ public class BoardTest extends Board {
     /**
      * Set the board to test the bishop movement
      */
-    public void setTestBishop(){
+    public void setTestBishop() {
         addPiece(new Bishop(PlayerColor.WHITE), new Coordinates(4, 1));
         addPiece(new Bishop(PlayerColor.BLACK), new Coordinates(3, 2));
     }
@@ -39,7 +39,7 @@ public class BoardTest extends Board {
     /**
      * Set the board to test the rook movement
      */
-    public void setTestRook(){
+    public void setTestRook() {
         addPiece(new Rook(PlayerColor.WHITE), new Coordinates(4, 1));
         addPiece(new Rook(PlayerColor.BLACK), new Coordinates(3, 2));
     }
@@ -47,7 +47,7 @@ public class BoardTest extends Board {
     /**
      * Set the board to test the queen movement
      */
-    public void setTestQueen(){
+    public void setTestQueen() {
         addPiece(new Queen(PlayerColor.WHITE), new Coordinates(4, 1));
         addPiece(new Queen(PlayerColor.BLACK), new Coordinates(3, 2));
     }
@@ -55,7 +55,7 @@ public class BoardTest extends Board {
     /**
      * Set the board to test the king movement
      */
-    public void setTestKing(){
+    public void setTestKing() {
         addPiece(new King(PlayerColor.WHITE), new Coordinates(4, 1));
         addPiece(new King(PlayerColor.BLACK), new Coordinates(3, 2));
     }
@@ -63,7 +63,7 @@ public class BoardTest extends Board {
     /**
      * Set the board to test the pawn promotion
      */
-    public void setTestPawnPromotion(){
+    public void setTestPawnPromotion() {
         addPiece(new Pawn(PlayerColor.WHITE), new Coordinates(4, 6));
         addPiece(new Pawn(PlayerColor.BLACK), new Coordinates(3, 1));
     }
@@ -71,7 +71,7 @@ public class BoardTest extends Board {
     /**
      * Set the board to test the check
      */
-    public void setTestCheck(){
+    public void setTestCheck() {
         addPiece(new King(PlayerColor.WHITE), new Coordinates(4, 0));
         addPiece(new King(PlayerColor.BLACK), new Coordinates(3, 2));
         addPiece(new Rook(PlayerColor.BLACK), new Coordinates(4, 7));

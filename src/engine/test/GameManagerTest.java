@@ -25,7 +25,8 @@ public class GameManagerTest extends GameManager {
         board.reset();
 
         // Ask the player which test he wants to do
-        ChessView.UserChoice test = view.askUser("Tests", "Which test do you want to do?",
+        ChessView.UserChoice test = view.askUser("Tests", "Which test do you " +
+                        "want to do?",
 
                 () -> "Test pawns",
                 () -> "Test Rook",
@@ -38,7 +39,7 @@ public class GameManagerTest extends GameManager {
                 () -> "Test castling"
         );
 
-        if(test == null) return;
+        if (test == null) return;
 
         // Set the board to the selected test
         switch (test.textValue()) {
