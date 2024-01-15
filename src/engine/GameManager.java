@@ -59,30 +59,10 @@ public class GameManager implements ChessController {
             if(view != null) {
                 // Ask the user which piece he wants
                 ChessView.UserChoice choice = view.askUser("Promotion", "Choose a piece to promote your pawn",
-                        new ChessView.UserChoice() {
-                            @Override
-                            public String textValue() {
-                                return "Queen";
-                            }
-                        },
-                        new ChessView.UserChoice() {
-                            @Override
-                            public String textValue() {
-                                return "Rook";
-                            }
-                        },
-                        new ChessView.UserChoice() {
-                            @Override
-                            public String textValue() {
-                                return "Bishop";
-                            }
-                        },
-                        new ChessView.UserChoice() {
-                            @Override
-                            public String textValue() {
-                                return "Knight";
-                            }
-                        });
+                        () -> "Queen",
+                        () -> "Rook",
+                        () -> "Bishop",
+                        () -> "Knight");
 
                 Coordinates coordinates = new Coordinates(cell.getX(), cell.getY());
                 // Set the new piece

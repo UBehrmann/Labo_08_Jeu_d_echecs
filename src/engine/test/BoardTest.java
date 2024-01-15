@@ -1,13 +1,10 @@
 package engine.test;
 
-import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
 import engine.utils.Coordinates;
 import engine.pieces.*;
 
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class BoardTest extends Board {
 
@@ -17,8 +14,6 @@ public class BoardTest extends Board {
 
     /**
      * Set the board to test the pawn movement and attack
-     *
-     * @return void
      */
     public void setTestPawn(){
         addPiece(new Pawn(PlayerColor.WHITE), new Coordinates(4, 1));
@@ -27,8 +22,6 @@ public class BoardTest extends Board {
 
     /**
      * Set the board to test the knight movement
-     *
-     * @return void
      */
     public void setTestKnight(){
         addPiece(new Knight(PlayerColor.WHITE), new Coordinates(4, 1));
@@ -37,8 +30,6 @@ public class BoardTest extends Board {
 
     /**
      * Set the board to test the bishop movement
-     *
-     * @return void
      */
     public void setTestBishop(){
         addPiece(new Bishop(PlayerColor.WHITE), new Coordinates(4, 1));
@@ -47,8 +38,6 @@ public class BoardTest extends Board {
 
     /**
      * Set the board to test the rook movement
-     *
-     * @return void
      */
     public void setTestRook(){
         addPiece(new Rook(PlayerColor.WHITE), new Coordinates(4, 1));
@@ -57,8 +46,6 @@ public class BoardTest extends Board {
 
     /**
      * Set the board to test the queen movement
-     *
-     * @return void
      */
     public void setTestQueen(){
         addPiece(new Queen(PlayerColor.WHITE), new Coordinates(4, 1));
@@ -67,8 +54,6 @@ public class BoardTest extends Board {
 
     /**
      * Set the board to test the king movement
-     *
-     * @return void
      */
     public void setTestKing(){
         addPiece(new King(PlayerColor.WHITE), new Coordinates(4, 1));
@@ -77,8 +62,6 @@ public class BoardTest extends Board {
 
     /**
      * Set the board to test the pawn promotion
-     *
-     * @return void
      */
     public void setTestPawnPromotion(){
         addPiece(new Pawn(PlayerColor.WHITE), new Coordinates(4, 6));
@@ -87,8 +70,6 @@ public class BoardTest extends Board {
 
     /**
      * Set the board to test the check
-     *
-     * @return void
      */
     public void setTestCheck(){
         addPiece(new King(PlayerColor.WHITE), new Coordinates(4, 0));
@@ -98,8 +79,6 @@ public class BoardTest extends Board {
 
     /**
      * Set the board to the castling test
-     *
-     * @return void
      */
     public void setTestCastling() {
         addPiece(new King(PlayerColor.WHITE), new Coordinates(4, 0));

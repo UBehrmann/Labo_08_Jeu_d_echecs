@@ -25,61 +25,22 @@ public class GameManagerTest extends GameManager {
         board.reset();
 
         // Ask the player which test he wants to do
-        ChessView.UserChoice test = view.askUser("Tests", "Quelles tests voulez vous faire?",
+        ChessView.UserChoice test = view.askUser("Tests", "Which test do you want to do?",
 
-                new ChessView.UserChoice() {
-                    @Override
-                    public String textValue() {
-                        return "Test pawns";
-                    }
-                },
-                new ChessView.UserChoice() {
-                    @Override
-                    public String textValue() {
-                        return "Test Rook";
-                    }
-                },
-                new ChessView.UserChoice() {
-                    @Override
-                    public String textValue() {
-                        return "Test Bishop";
-                    }
-                },
-                new ChessView.UserChoice() {
-                    @Override
-                    public String textValue() {
-                        return "Test Knight";
-                    }
-                },
-                new ChessView.UserChoice() {
-                    @Override
-                    public String textValue() {
-                        return "Test Queen";
-                    }
-                },
-                new ChessView.UserChoice() {
-                    @Override
-                    public String textValue() {
-                        return "Test King";
-                    }
-                },
-                new ChessView.UserChoice() {
-                    @Override
-                    public String textValue() {
-                        return "Test check";
-                    }
-                },
-                new ChessView.UserChoice() {
-                    @Override
-                    public String textValue() {
-                        return "Test castling";
-                    }
-                }
+                () -> "Test pawns",
+                () -> "Test Rook",
+                () -> "Test Bishop",
+                () -> "Test Knight",
+                () -> "Test Queen",
+                () -> "Test King",
+                () -> "Test pawn promotion",
+                () -> "Test check",
+                () -> "Test castling"
         );
 
-        if(test == null)
-            return;
+        if(test == null) return;
 
+        // Set the board to the selected test
         switch (test.textValue()) {
             case "Test pawns":
                 ((BoardTest) board).setTestPawn();
@@ -98,6 +59,9 @@ public class GameManagerTest extends GameManager {
                 break;
             case "Test King":
                 ((BoardTest) board).setTestKing();
+                break;
+            case "Test pawn promotion":
+                ((BoardTest) board).setTestPawnPromotion();
                 break;
             case "Test check":
                 ((BoardTest) board).setTestCheck();
