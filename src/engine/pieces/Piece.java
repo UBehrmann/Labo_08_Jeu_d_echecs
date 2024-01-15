@@ -9,6 +9,7 @@ public abstract class Piece {
     private final PieceType type;
     private final PlayerColor color;
     private Movements movements;
+    boolean firstMovement = true;
 
     public Piece(PieceType type, PlayerColor color, Movements movements) {
         if (type == null) throw new IllegalArgumentException("Piece type cannot be null");
@@ -52,5 +53,13 @@ public abstract class Piece {
             if(Coordinates.equal(c,positionFinal)) return true;
         }
         return false;
+    }
+
+    public boolean isFirstMovement() {
+        return this.firstMovement;
+    }
+
+    public void clearFirstMovement() {
+        this.firstMovement = false;
     }
 }

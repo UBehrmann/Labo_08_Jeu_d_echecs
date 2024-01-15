@@ -59,16 +59,6 @@ public class Board {
         Coordinates positionInitial = new Coordinates(x1, y1);
         Coordinates positionFinal = new Coordinates(x2, y2);
 
-        // Check if there's an opponent's piece in the first diagonal step
-        if (Math.abs(x2 - x1) == 1 && Math.abs(y2 - y1) == 1) {
-            Piece targetPiece = getPieceInBoard(new Coordinates(x2, y2));
-            if (targetPiece != null && targetPiece.getColor() != piece.getColor()) {
-                // Perform diagonal capture
-                movePiece(positionInitial, positionFinal);
-                return true;
-            }
-        }
-
         // Check if the piece can move to the new position
         if(!piece.movementIsOk(positionInitial, positionFinal)) return false;
 
@@ -93,17 +83,43 @@ public class Board {
             if (piecesColors[positionPiece.getX()][positionPiece.getY()] != null) return false;
         }
 
-        // After the pawn's first move, change its maximum step to 1 instead of 2
-        if(piece.getType() == PieceType.PAWN) ((Pawn)piece).clearFirstMovement();
-
         // If the piece is a king, and he would be in check after the movement, the movement is prohibited
         if(piece.getType() == PieceType.KING && testCheck(positionFinal, piece.getColor()) ) return false;
+
+        // If the king is castling, check if the rook is in the correct position and if it is the first movement of the king and the rook
+        if(piece.getType() == PieceType.KING && ((King)piece).isFirstMovement()) castling(piece, positionInitial, positionFinal);
+
+        // If the piece is a pawn, and it takes a piece in the "en passant" movement, remove the piece
+        if(piece.getType() == PieceType.PAWN && Math.abs(x2 - x1) == 1 && Math.abs(y2 - y1) == 1 ){
+            if(getPieceInBoard(new Coordinates(x2, y1)) != null){
+                removePiece(new Coordinates(x2, y1));
+            }else if(getPieceInBoard(new Coordinates(x2, y2)) == null){
+                return false;
+            }
+        }
 
         // do the movement
         movePiece(new Coordinates(x1, y1), new Coordinates(x2, y2));
 
         return true;
     }
+
+    private void castling(Piece piece, Coordinates positionInitial, Coordinates positionFinal) {
+        // Check if the rook is in the correct position
+        if(positionFinal.getX() == 2 || positionFinal.getX() == 6){
+            // Check if it is the first movement of the king and the rook
+            if(((Rook)getPieceInBoard(new Coordinates(positionFinal.getX() == 2 ? 0 : 7, positionFinal.getY()))).isFirstMovement()){
+                // Check if there is a piece between the king and the rook
+                if(getPieceInBoard(new Coordinates(positionFinal.getX() == 2 ? 1 : 5, positionFinal.getY())) == null){
+                    // Move the rook
+                    movePiece(new Coordinates(positionFinal.getX() == 2 ? 0 : 7, positionFinal.getY()), new Coordinates(positionFinal.getX() == 2 ? 3 : 5, positionFinal.getY()));
+                    // Decrease the turn counter because the rook is moved
+                    turn--;
+                }
+            }
+        }
+    }
+
 
     private void movePiece(Coordinates positionInitial, Coordinates positionFinal) {
 
@@ -112,6 +128,8 @@ public class Board {
         removePiece(positionInitial);
 
         setPiece(piece, positionFinal);
+
+        piece.clearFirstMovement();
 
         // Update the turn
         turn++;
