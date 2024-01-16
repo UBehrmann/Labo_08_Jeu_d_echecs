@@ -62,33 +62,8 @@ public class Board {
         // get the position of the pieces' colors on the board
         PlayerColor[][] piecesColors = getPositionOfPieceColors();
 
-        // Get the possible movement of the part from the initial to the final
-        // position
-        // The possible movement is a sequence of coordinates following a step
-        // from the initial position to the final position.
-        Coordinates[] movementPiece = piece.getPossibleMovement(positionInitial,
-                positionFinal);
 
-        // position initial -> ... -> position final -> ... -> Max step
-        for (Coordinates positionPiece : movementPiece) {
-            //If there is a piece of the same color as the one making the last
-            // move to the final position, the move is considered forbidden.
-            // Otherwise, (if there is a piece of a different color or no piece
-            // at all), control stops, and the move is allowed.
-            if (Coordinates.equal(positionPiece, positionFinal)) {
-                if (piecesColors[positionPiece.getX()][positionPiece.getY()] ==
-                        piece.getColor())
-                    return false;
-                break;
-            }
-
-            // If, while traversing the movement, and we have not yet reached
-            // the final position, there is a piece,
-            // regardless of its color, present (obstacle), then the move is
-            // prohibited.
-            if (piecesColors[positionPiece.getX()][positionPiece.getY()] != null)
-                return false;
-        }
+        if ( !checkPieceInWay(piecesColors, piece, positionInitial, positionFinal)) return false;
 
         // King special movements
         if (piece.getType() == PieceType.KING) {
@@ -116,6 +91,42 @@ public class Board {
         // do the movement
         movePiece(new Coordinates(x1, y1), new Coordinates(x2, y2));
 
+        // Update the turn
+        turn++;
+
+        return true;
+    }
+
+    private boolean checkPieceInWay(PlayerColor[][] piecesColors, Piece piece, Coordinates positionInitial, Coordinates positionFinal) {
+        // Get the possible movement of the part from the initial to the final
+        // position
+        // The possible movement is a sequence of coordinates following a step
+        // from the initial position to the final position.
+        Coordinates[] movementPiece = piece.getPossibleMovement(positionInitial,
+                positionFinal);
+
+
+        // position initial -> ... -> position final -> ... -> Max step
+        for (Coordinates positionPiece : movementPiece) {
+            //If there is a piece of the same color as the one making the last
+            // move to the final position, the move is considered forbidden.
+            // Otherwise, (if there is a piece of a different color or no piece
+            // at all), control stops, and the move is allowed.
+            if (Coordinates.equal(positionPiece, positionFinal)) {
+                if (piecesColors[positionPiece.getX()][positionPiece.getY()] ==
+                        piece.getColor())
+                    return false;
+                break;
+            }
+
+            // If, while traversing the movement, and we have not yet reached
+            // the final position, there is a piece,
+            // regardless of its color, present (obstacle), then the move is
+            // prohibited.
+            if (piecesColors[positionPiece.getX()][positionPiece.getY()] != null)
+                return false;
+        }
+
         return true;
     }
 
@@ -124,26 +135,21 @@ public class Board {
         // Check if the rook is in the correct position
         if (positionFinal.getX() == 2 || positionFinal.getX() == 6) {
 
+            Coordinates positionStartRook = new Coordinates(positionFinal.getX() == 2 ? 0 : 7,
+                    positionFinal.getY());
+            Coordinates positionEndRook = new Coordinates(positionFinal.getX() == 2 ? 3 : 5,
+                    positionFinal.getY());
+
             // Check if it is the first movement of the king and the rook
-            if (getPieceInBoard(
-                    new Coordinates(positionFinal.getX() == 2 ? 0 : 7,
-                            positionFinal.getY())).isFirstMovement()) {
+            Piece piece = getPieceInBoard(positionStartRook);
 
-                // Check if there is a piece between the king and the rook
-                if (getPieceInBoard(
-                        new Coordinates(positionFinal.getX() == 2 ? 1 : 5,
-                                positionFinal.getY())) == null) {
+            if(!(piece instanceof Rook) || !piece.isFirstMovement()) return;
 
-                    // Move the rook
-                    movePiece(new Coordinates(positionFinal.getX() == 2 ? 0 :7,
-                                    positionFinal.getY()),
-                            new Coordinates(positionFinal.getX() == 2 ? 3 : 5,
-                                    positionFinal.getY()));
+            // Check if there is a piece between the king and the rook
+            if( !checkPieceInWay(getPositionOfPieceColors(), piece, positionStartRook, positionEndRook)) return;
 
-                    // Decrease the turn counter because the rook is moved
-                    turn--;
-                }
-            }
+            // Move the rook
+            movePiece(positionStartRook, positionEndRook);
         }
     }
 
@@ -158,9 +164,6 @@ public class Board {
         setPiece(piece, positionFinal);
 
         piece.clearFirstMovement();
-
-        // Update the turn
-        turn++;
     }
 
     public boolean isCheck() {
@@ -200,23 +203,39 @@ public class Board {
                 kingCell.getY());
 
         // Check if the king is in check
-        if (!isCheck()) return false;
+        if ( !isCheck() ) return false;
 
         // Check if the king can move
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                Coordinates positionPiece = new Coordinates(i, j);
-                if (kingCell.getPiece().movementIsOk(positionKing,
-                        positionPiece))
-                    return false;
+        return checkIfKingCanNotMove(positionKing);
+    }
+
+    private boolean checkIfKingCanNotMove(Coordinates positionKing) {
+        for (int i = positionKing.getX() - 1; i <= positionKing.getX() + 1; i++) {
+            for (int j = positionKing.getY() - 1; j <= positionKing.getY() + 1; j++) {
+                if ((i == positionKing.getX() && j == positionKing.getY()) || i > width -1 || j > height -1 || i < 0 || j < 0) continue;
+                if( !testCheck(new Coordinates(i, j), getCurrentPlayer()) ) return false;
             }
         }
 
         return true;
     }
 
-    public boolean isStaleMate(PlayerColor color) {
-        return true;
+    public boolean isStaleMate() {
+        PlayerColor color = getCurrentPlayer();
+
+        //Find the king
+        Cell kingCell = findKing(color);
+
+        if (kingCell == null) return false;
+
+        Coordinates positionKing = new Coordinates(kingCell.getX(),
+                kingCell.getY());
+
+        // Check if the king is in check
+        if (isCheck()) return false;
+
+        //Check if the king can make a move
+        return checkIfKingCanNotMove(positionKing);
     }
 
     public boolean isDraw() {
@@ -307,6 +326,10 @@ public class Board {
 
     public PlayerColor getCurrentPlayer() {
         return turn % 2 == 1 ? PlayerColor.WHITE : PlayerColor.BLACK;
+    }
+
+    public PlayerColor getOpponentPlayer() {
+        return turn % 2 == 0 ? PlayerColor.WHITE : PlayerColor.BLACK;
     }
 
     public void setAddPieceListener(PieceListener listener) {

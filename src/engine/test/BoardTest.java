@@ -92,10 +92,9 @@ public class BoardTest extends Board {
      */
     public void setTestStalemate() {
         addPiece(new King(PlayerColor.WHITE), new Coordinates(4, 0));
-        addPiece(new King(PlayerColor.BLACK), new Coordinates(3, 2));
-        addPiece(new Rook(PlayerColor.BLACK), new Coordinates(4, 7));
-        addPiece(new Rook(PlayerColor.BLACK), new Coordinates(5, 7));
-        addPiece(new Rook(PlayerColor.BLACK), new Coordinates(5, 6));
+        addPiece(new King(PlayerColor.BLACK), new Coordinates(7, 7));
+        addPiece(new Rook(PlayerColor.WHITE), new Coordinates(0, 6));
+        addPiece(new Rook(PlayerColor.WHITE), new Coordinates(0, 1));
     }
 
     /**

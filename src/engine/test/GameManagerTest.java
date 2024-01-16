@@ -24,6 +24,9 @@ public class GameManagerTest extends GameManager {
         // Reset the board
         board.reset();
 
+        // Update the message
+        updateMessage();
+
         // Ask the player which test he wants to do
         ChessView.UserChoice test = view.askUser("Tests", "Which test do you " +
                         "want to do?",

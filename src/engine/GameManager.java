@@ -15,7 +15,7 @@ public class GameManager implements ChessController {
                 BoardDimensions.HEIGHT.getValue());
     }
 
-    private void updateMessage() {
+    protected void updateMessage() {
         if (view == null || board == null) return;
 
         StringBuilder message = new StringBuilder();
@@ -25,14 +25,20 @@ public class GameManager implements ChessController {
 
         // If the king is in checkmate
         if (board.isCheckMate()) {
-            message.append(" (Checkmate)");
-            message.append(board.getCurrentPlayer()).append(" player wins");
-        } else {
+
+            message.append("(Checkmate) ");
+            message.append(board.getOpponentPlayer()).append(" player wins");
+
+        } else if(board.isStaleMate()){
+            message.append("(Stalemate) ");
+            message.append("Draw");
+
+        }else {
             // Add the current player
-            message.append(board.getCurrentPlayer()).append(" player's turn");
+            message.append(board.getCurrentPlayer()).append(" player's turn ");
 
             // If the king is in check
-            message.append(board.isCheck() ? " (Check)" : "");
+            message.append(board.isCheck() ? "(Check)" : "");
         }
 
         // Update the message
