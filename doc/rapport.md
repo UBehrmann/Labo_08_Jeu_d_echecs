@@ -1,6 +1,9 @@
+<div align="justify" style="margin-right:25px;margin-left:25px">
 
 # Mouvement
+
 ## Fichiers et Leur Rôle
+
 ### `Step.java`
 - Définit un pas de mouvement.
 - Selon le maxStep, il définie un mouvement via des les coordonnées : 
@@ -36,6 +39,7 @@ public class X extends Piece {
 ![](Images/Piece.png)
 
 ## Fonctionnement Général
+
 Les mouvements des pièces sont gérés de manière modulaire, où chaque pièce a ses propres règles de mouvement définies dans des classes spécifiques (par exemple, `Knight.java`, `Pawn.java`). Ces classes utilisent la classe `Movements` pour gérer les déplacements possibles. La classe `Step` joue un rôle clé en définissant la nature d'un pas de mouvement, tandis que `Coordinates` est utilisée pour représenter et manipuler les positions sur le plateau.
 
 Exemple d'utilisation:
@@ -62,7 +66,8 @@ public class King extends Piece {
 ```
 
 # Tests
-On a crée un GameManagerTest qui peut lancer plusieurs scènarios de test différent:
+
+On a crée un GameManagerTest et un BoardTest qui peuvent lancer plusieurs scènarios de test différent :
 
 - test pawn
 - test rook
@@ -70,12 +75,70 @@ On a crée un GameManagerTest qui peut lancer plusieurs scènarios de test diff�
 - test queen
 - test king
 - test bishop
-- test promotion
-- test castling
+- test pawn promotion
 - test check
+- test checkmate
+- test stalemate
+- test castling
 
 ## test pawn
 
-On a que deux pions sur le plateau pour tester le mouvement des pions et leur attack en passant et en diagonal.
+On a que deux pions sur le plateau pour tester le mouvement des pions et leur attack "en passant" et en diagonal.
 
+## test rook
 
+On a que deux tours sur le plateau pour tester le mouvement des tours et leur attack.
+
+On peut aussi tester le mouvement des tours quand il y a des pièces entre la tour et la position finale.
+
+## test knight
+
+On a que deux cavaliers sur le plateau pour tester le mouvement des cavaliers et leur attack.
+
+## test queen
+
+On a que deux reines sur le plateau pour tester le mouvement des reines et leur attack.
+
+On peut aussi tester le mouvement des reines quand il y a des pièces entre la reine et la position finale.
+
+## test king
+
+On a que deux rois sur le plateau pour tester le mouvement des rois et leur attack.
+
+On peut aussi tester le mouvement des rois quand il y a une pièce qui peut attaquer le roi et est donc un mouvement illégal.
+
+## test bishop
+
+On a que deux fous sur le plateau pour tester le mouvement des fous et leur attack.
+
+On peut aussi tester le mouvement des fous quand il y a des pièces entre le fou et la position finale.
+
+## test pawn promotion
+
+On a que deux pions sur le plateau pour tester la promotion des pions.
+
+## test check
+
+On a quelque pièces sur le plateau pour tester le check pour noir.
+
+<img src="Images/check.png" alt="check">
+
+## test checkmate
+
+On a quelque pièces sur le plateau pour tester le checkmate pour noir.
+
+<img src="Images/checkmate.png" alt="checkmate">
+
+## test stalemate
+
+On a quelque pièces sur le plateau pour tester le stalemate pour noir.
+
+<img src="Images/stalemate.png" alt="stalemate">
+
+## test castling
+
+On a les deux rois et les quatre tours sur le plateau pour tester les deux castling pour les deux couleurs.
+
+<img src="Images/castling.png" alte="catling">
+
+</div>
