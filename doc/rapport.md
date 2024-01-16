@@ -10,11 +10,26 @@ ____________________
 
 # Modélisation UML
 
-
+<img src="Images/Labo%208.svg" alt="UML Labo 8">
 
 ____________________
 
 # Choix de conception
+
+## GameManager
+
+Le GameManager est la classe qui gère le jeu. Il contient les méthodes pour faire le liens entre l'UI et l'engine. Il hérite de la classe 'ChessController' qui est une classe abstraite qui contient les méthodes pour gérer le jeu. Elle contient la méthode 'initListenres' qui initialise les listeners qui transforme l'UI dans l'engine, lorsque l'utilisateur veut bouger une pièce sur la plateau à travers la fonction 'move'. On a aussi les fonctions 'newGame' qui reset le plateau et l'UI.
+
+La 'updateMessage' est une fonction qui met à jour le message de l'UI. Elle est appelée à chaque fois qu'un mouvement est fait. Elle écrit qui qui doit jouer, si il y a un "check", "checkmate" ou "stalemate".
+
+
+## Plateau ( 'Board' )
+
+Le plateau est une classe qui contient les pièces et les méthodes pour les manipuler. Elle contient un Array de cellule qui représente le plateau affiché sur l'UI.
+
+Elle contient les fonction qui servent à bouger les pièces, à les supprimer et à les ajouter. Elle contient aussi les fonctions qui servent à vérifier si un mouvement est légal ou pas, si le roi est en "check", "checkmate" ou "stalemate".
+
+Elle est aussi responsable de déterminer quel joueur doit jouer et aussi le nombre de tour jouer.
 
 ## Mouvement
 
@@ -38,13 +53,14 @@ public class X extends Piece {
     }
 }
 ```
-![](Images/Step.png)
+
+<img src="Images/Step.png" alt="Step">
 
 #### `Movements.java`
 - Gère les mouvements des pièces.
 - Contient une liste de `Step` et une méthode pour obtenir `Step` possible en fonction des positions initiale et finale.
 
-![](Images/Mouvements.png)
+<img src="Images/Mouvements.png" alt="Mouvements">
 
 #### `Piece.java`
 - Contient une méthode `Coordinates[] getPossibleMovement( ... )` qui via les `movements` et les positions initiale et finale détermine le step possible et retourne son mouvement.
@@ -52,7 +68,7 @@ public class X extends Piece {
   - Si oui : Le mouvement de la position initiale à finale est possible
   - Sinon : Le mouvement de la position initiale à finale est impossible
 
-![](Images/Piece.png)
+<img src="Images/Piece.png" alt="Piece">
 
 ### Fonctionnement Général
 
@@ -162,5 +178,17 @@ On a quelque pièces sur le plateau pour tester le "stalemate" pour noir.
 On a les deux rois et les quatre tours sur le plateau pour tester les deux "castling" pour les deux couleurs.
 
 <img src="Images/castling.png" alte="catling">
+
+____________________
+
+# Points bonus
+
+L'échec, l'échec et mat et la pat sont implémentés. On a fait plusieurs tests pour vérifier si les fonctions marchent correctement, mais on n'a pas testé toutes les possibilités probablement.
+
+L'implémentation du test si le roi est en échec et mat n'est pas très efficace. Car on essaie de bouger toutes les pièces de la couleur qui doit jouer et on vérifie si le roi est toujours en échec. Si oui, alors c'est un échec et mat. Si non, alors c'est un échec. Ceci fait que beaucoup de mouvements sont faits pour rien. On pourrait améliorer cette implémentation.
+
+____________________
+
+# Listing du code
 
 </div>

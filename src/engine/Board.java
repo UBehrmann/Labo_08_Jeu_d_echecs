@@ -123,25 +123,17 @@ public class Board {
             }
         }
 
+        // do the movement
+        Piece pieceTmp = getPieceInBoard(positionFinal);
+        movePiece(positionInitial, positionFinal);
+
         // If the king is in check after the movement, the movement is
         // prohibited
-        if (piece.getType() == PieceType.KING) {
-
-            Piece pieceTmp = getPieceInBoard(positionFinal);
-            movePiece(positionInitial, positionFinal);
-
-            if (testCheck(positionFinal, piece.getColor())) {
-                movePiece(positionFinal, positionInitial);
-                setPiece(pieceTmp, positionFinal);
-                return false;
-            }else{
-                return true;
-            }
-        }else if (testCheck(findKing(piece.getColor()), piece.getColor()))
+        if(testCheck(findKing(piece.getColor()), piece.getColor())){
+            movePiece(positionFinal, positionInitial);
+            if(pieceTmp != null) setPiece(pieceTmp, positionFinal);
             return false;
-
-        // do the movement
-        movePiece(positionInitial, positionFinal);
+        }
 
         // Update the turn
         turn++;
@@ -286,8 +278,67 @@ public class Board {
         // Check if the king is in check
         if ( !isCheck() ) return false;
 
-        // Check if the king can move
-        return checkIfKingCanNotMove(findKing(color));
+        // Check if any piece can move to a position where the king is not in
+        // check
+
+        Coordinates positionKing = findKing(getCurrentPlayer());
+
+        for (int i = 0; i < this.cells.length; ++i){
+            for(int j = 0; j < this.cells[i].length; ++j){
+                Piece piece = this.cells[i][j].getPiece();
+
+                if(piece == null || piece.getColor() != color ||
+                        piece instanceof King) continue;
+
+                Coordinates startPosition = new Coordinates(i, j);
+
+                if (tryEveryMoveToSaveKing(piece, positionKing, startPosition, color))
+                    return false;
+            }
+        }
+
+        // If the king is in check, and no piece can move to a position where
+        // the king is not in check, the king is in checkmate
+        return true;
+    }
+
+    /**
+     * Try every move of the piece to save the king
+     *
+     * @param piece the piece to move
+     * @param positionKing the position of the king
+     * @param startPosition the position of the piece to move
+     * @param color the color of the piece to move
+     * @return boolean true if the king is saved, false otherwise
+     */
+    private boolean tryEveryMoveToSaveKing(Piece piece,
+                                           Coordinates positionKing,
+                                           Coordinates startPosition,
+                                           PlayerColor color) {
+        for (int i2 = 0; i2 < this.cells.length; ++i2){
+            for(int j2 = 0; j2 < this.cells[i2].length; ++j2){
+
+                Coordinates positionTmp = new Coordinates(i2, j2);
+
+                if(piece.movementIsOk(new Coordinates(i2, j2),
+                        positionKing)){
+                    if(!checkPieceInWay(getPositionOfPieceColors(),
+                            piece, positionTmp, positionKing)){
+
+                        Piece pieceTmp = getPieceInBoard(new Coordinates(i2, j2));
+
+                        movePiece(startPosition, positionTmp);
+
+                        if(!testCheck(positionKing, color)){
+                            movePiece(positionTmp, startPosition);
+                            if(pieceTmp != null) setPiece(pieceTmp, positionTmp);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
