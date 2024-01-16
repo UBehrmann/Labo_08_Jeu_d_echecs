@@ -63,7 +63,7 @@ public class Board {
         PlayerColor[][] piecesColors = getPositionOfPieceColors();
 
 
-        if ( !checkPieceInWay(piecesColors, piece, positionInitial, positionFinal)) return false;
+        if (checkNoPieceInWay(piecesColors, piece, positionInitial, positionFinal)) return false;
 
         // King special movements
         if (piece.getType() == PieceType.KING) {
@@ -97,7 +97,7 @@ public class Board {
         return true;
     }
 
-    private boolean checkPieceInWay(PlayerColor[][] piecesColors, Piece piece, Coordinates positionInitial, Coordinates positionFinal) {
+    private boolean checkNoPieceInWay(PlayerColor[][] piecesColors, Piece piece, Coordinates positionInitial, Coordinates positionFinal) {
         // Get the possible movement of the part from the initial to the final
         // position
         // The possible movement is a sequence of coordinates following a step
@@ -115,7 +115,7 @@ public class Board {
             if (Coordinates.equal(positionPiece, positionFinal)) {
                 if (piecesColors[positionPiece.getX()][positionPiece.getY()] ==
                         piece.getColor())
-                    return false;
+                    return true;
                 break;
             }
 
@@ -124,10 +124,10 @@ public class Board {
             // regardless of its color, present (obstacle), then the move is
             // prohibited.
             if (piecesColors[positionPiece.getX()][positionPiece.getY()] != null)
-                return false;
+                return true;
         }
 
-        return true;
+        return false;
     }
 
     private void castling(Coordinates positionFinal) {
@@ -146,7 +146,7 @@ public class Board {
             if(!(piece instanceof Rook) || !piece.isFirstMovement()) return;
 
             // Check if there is a piece between the king and the rook
-            if( !checkPieceInWay(getPositionOfPieceColors(), piece, positionStartRook, positionEndRook)) return;
+            if(checkNoPieceInWay(getPositionOfPieceColors(), piece, positionStartRook, positionEndRook)) return;
 
             // Move the rook
             movePiece(positionStartRook, positionEndRook);
@@ -236,10 +236,6 @@ public class Board {
 
         //Check if the king can make a move
         return checkIfKingCanNotMove(positionKing);
-    }
-
-    public boolean isDraw() {
-        return true;
     }
 
     public void reset() {
