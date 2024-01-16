@@ -32,6 +32,7 @@ public class GameManager implements ChessController {
             message.append("(Checkmate) ");
             message.append(board.getOpponentPlayer()).append(" player wins");
 
+            // If the king is in stalemate
         } else if(board.isStaleMate()){
             message.append("(Stalemate) ");
             message.append("Draw");

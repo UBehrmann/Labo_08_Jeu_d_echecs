@@ -3,9 +3,9 @@ package engine.movements;
 import engine.utils.Coordinates;
 
 public class Step {
-    Coordinates coordinates;
-    Coordinates[] movement;
-    double stepAngleDegree;
+    private Coordinates coordinates;
+    private Coordinates[] movement;
+    private double stepAngleDegree;
 
     public Step(Coordinates step, int maxStep, boolean invertOrdinateAxis,
                 boolean invertAbscissaAxis) {
@@ -26,6 +26,12 @@ public class Step {
             this.movement[i] = nextStep(i);
     }
 
+    /**
+     * Get the next step for the number of step given
+     *
+     * @param nbStep the number of step
+     * @return the next step
+     */
     private Coordinates nextStep(int nbStep) {
         int x = this.coordinates.getX();
         int y = this.coordinates.getY();
@@ -34,10 +40,22 @@ public class Step {
         return new Coordinates(x, y);
     }
 
+    /**
+     * Check if the angle of the step is the same as the angle of the movement
+     *
+     * @param stepAngleDegree the angle of the step
+     * @return true if the angle of the step is the same as the angle of the
+     *        movement
+     */
     public boolean stepAngleDegreeIsOk(double stepAngleDegree) {
         return this.stepAngleDegree == stepAngleDegree;
     }
 
+    /**
+     * Get the coordinates of the movement
+     *
+     * @return the coordinates
+     */
     public Coordinates[] getMovement() {
         return this.movement;
     }

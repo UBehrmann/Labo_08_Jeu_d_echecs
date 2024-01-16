@@ -98,7 +98,7 @@ public class Board {
         PlayerColor[][] piecesColors = getPositionOfPieceColors();
 
 
-        if (checkNoPieceInWay(piecesColors, piece, positionInitial, positionFinal)) return false;
+        if (checkPieceInWay(piecesColors, piece, positionInitial, positionFinal)) return false;
 
         // King special movements
         if (piece.getType() == PieceType.KING) {
@@ -133,8 +133,7 @@ public class Board {
     }
 
     /**
-     * Do the movement of the piece at the specified position to the specified
-     * position
+     * Check if there is no piece in the way of the movement
      *
      * @param piecesColors the colors of the pieces on the board
      * @param piece the piece to move
@@ -142,7 +141,7 @@ public class Board {
      * @param positionFinal the position of the destination
      * @return boolean true if the movement is done, false otherwise
      */
-    private boolean checkNoPieceInWay(PlayerColor[][] piecesColors, Piece piece, Coordinates positionInitial, Coordinates positionFinal) {
+    private boolean checkPieceInWay(PlayerColor[][] piecesColors, Piece piece, Coordinates positionInitial, Coordinates positionFinal) {
         // Get the possible movement of the part from the initial to the final
         // position
         // The possible movement is a sequence of coordinates following a step
@@ -196,7 +195,7 @@ public class Board {
             if(!(piece instanceof Rook) || !piece.isFirstMovement()) return;
 
             // Check if there is a piece between the king and the rook
-            if(checkNoPieceInWay(getPositionOfPieceColors(), piece, positionStartRook, positionEndRook)) return;
+            if(checkPieceInWay(getPositionOfPieceColors(), piece, positionStartRook, positionEndRook)) return;
 
             // Move the rook
             movePiece(positionStartRook, positionEndRook);
@@ -250,7 +249,8 @@ public class Board {
                 Coordinates positionPiece = new Coordinates(i, j);
                 Piece piece = getPieceInBoard(positionPiece);
                 if (piece != null && piece.getColor() != color &&
-                        piece.movementIsOk(positionPiece, positionKing))
+                        piece.movementIsOk(positionPiece, positionKing) &&
+                        !checkPieceInWay(getPositionOfPieceColors(), piece, positionPiece, positionKing))
                     return true;
             }
         }

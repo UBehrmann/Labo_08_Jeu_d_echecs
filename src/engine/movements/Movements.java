@@ -11,6 +11,13 @@ public class Movements {
         this.steps = steps;
     }
 
+    /**
+     * Get the possible step for the initial position and the final position
+     *
+     * @param positionInitial the initial position
+     * @param positionFinal   the final position
+     * @return the possible step or null if there is no possible step
+     */
     public Step getPossibleStep(Coordinates positionInitial,
                                 Coordinates positionFinal) {
         double angleDegree = Coordinates.getAngleDegree(positionInitial,
