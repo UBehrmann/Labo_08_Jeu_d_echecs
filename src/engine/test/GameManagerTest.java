@@ -36,6 +36,8 @@ public class GameManagerTest extends GameManager {
                 () -> "Test King",
                 () -> "Test pawn promotion",
                 () -> "Test check",
+                () -> "Test checkmate",
+                () -> "Test stalemate",
                 () -> "Test castling"
         );
 
@@ -67,8 +69,16 @@ public class GameManagerTest extends GameManager {
             case "Test check":
                 ((BoardTest) board).setTestCheck();
                 break;
+            case "Test checkmate":
+                ((BoardTest) board).setTestCheckmate();
+                break;
+            case "Test stalemate":
+                ((BoardTest) board).setTestStalemate();
+                break;
             case "Test castling":
                 ((BoardTest) board).setTestCastling();
+                break;
+            default:
                 break;
         }
     }

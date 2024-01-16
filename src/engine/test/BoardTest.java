@@ -17,7 +17,7 @@ public class BoardTest extends Board {
      */
     public void setTestPawn() {
         addPiece(new Pawn(PlayerColor.WHITE), new Coordinates(4, 1));
-        addPiece(new Pawn(PlayerColor.BLACK), new Coordinates(3, 2));
+        addPiece(new Pawn(PlayerColor.BLACK), new Coordinates(3, 4));
     }
 
     /**
@@ -25,7 +25,7 @@ public class BoardTest extends Board {
      */
     public void setTestKnight() {
         addPiece(new Knight(PlayerColor.WHITE), new Coordinates(4, 1));
-        addPiece(new Knight(PlayerColor.BLACK), new Coordinates(3, 2));
+        addPiece(new Knight(PlayerColor.BLACK), new Coordinates(3, 3));
     }
 
     /**
@@ -57,7 +57,7 @@ public class BoardTest extends Board {
      */
     public void setTestKing() {
         addPiece(new King(PlayerColor.WHITE), new Coordinates(4, 1));
-        addPiece(new King(PlayerColor.BLACK), new Coordinates(3, 2));
+        addPiece(new King(PlayerColor.BLACK), new Coordinates(3, 3));
     }
 
     /**
@@ -73,8 +73,29 @@ public class BoardTest extends Board {
      */
     public void setTestCheck() {
         addPiece(new King(PlayerColor.WHITE), new Coordinates(4, 0));
+        addPiece(new King(PlayerColor.BLACK), new Coordinates(3, 7));
+        addPiece(new Rook(PlayerColor.WHITE), new Coordinates(4, 1));
+    }
+
+    /**
+     * Set the board to test the checkmate
+     */
+    public void setTestCheckmate() {
+        addPiece(new King(PlayerColor.WHITE), new Coordinates(4, 0));
+        addPiece(new King(PlayerColor.BLACK), new Coordinates(7, 7));
+        addPiece(new Rook(PlayerColor.WHITE), new Coordinates(6, 1));
+        addPiece(new Queen(PlayerColor.WHITE), new Coordinates(0, 6));
+    }
+
+    /**
+     * Set the board to test the stalemate
+     */
+    public void setTestStalemate() {
+        addPiece(new King(PlayerColor.WHITE), new Coordinates(4, 0));
         addPiece(new King(PlayerColor.BLACK), new Coordinates(3, 2));
         addPiece(new Rook(PlayerColor.BLACK), new Coordinates(4, 7));
+        addPiece(new Rook(PlayerColor.BLACK), new Coordinates(5, 7));
+        addPiece(new Rook(PlayerColor.BLACK), new Coordinates(5, 6));
     }
 
     /**
