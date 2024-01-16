@@ -60,3 +60,22 @@ public class King extends Piece {
     }
 }
 ```
+
+# Tests
+On a crée un GameManagerTest qui peut lancer plusieurs scènarios de test différent:
+
+- test pawn
+- test rook
+- test knight
+- test queen
+- test king
+- test bishop
+- test promotion
+- test castling
+- test check
+
+## test pawn
+
+On a que deux pions sur le plateau pour tester le mouvement des pions et leur attack en passant et en diagonal.
+
+
