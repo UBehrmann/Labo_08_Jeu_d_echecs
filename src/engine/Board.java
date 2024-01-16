@@ -123,8 +123,25 @@ public class Board {
             }
         }
 
+        // If the king is in check after the movement, the movement is
+        // prohibited
+        if (piece.getType() == PieceType.KING) {
+
+            Piece pieceTmp = getPieceInBoard(positionFinal);
+            movePiece(positionInitial, positionFinal);
+
+            if (testCheck(positionFinal, piece.getColor())) {
+                movePiece(positionFinal, positionInitial);
+                setPiece(pieceTmp, positionFinal);
+                return false;
+            }else{
+                return true;
+            }
+        }else if (testCheck(findKing(piece.getColor()), piece.getColor()))
+            return false;
+
         // do the movement
-        movePiece(new Coordinates(x1, y1), new Coordinates(x2, y2));
+        movePiece(positionInitial, positionFinal);
 
         // Update the turn
         turn++;
