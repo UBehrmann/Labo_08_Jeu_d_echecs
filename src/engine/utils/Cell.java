@@ -1,4 +1,4 @@
-package engine;
+package engine.utils;
 
 import engine.pieces.*;
 
@@ -6,10 +6,10 @@ public class Cell {
 
     private Piece piece;
 
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
-    public Cell( Piece piece , int x, int y ) {
+    public Cell(Piece piece, int x, int y) {
         this.piece = piece;
         this.x = x;
         this.y = y;
