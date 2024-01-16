@@ -9,7 +9,7 @@ public abstract class Piece {
     private final PieceType type;
     private final PlayerColor color;
     private Movements movements;
-    boolean firstMovement = true;
+    protected boolean firstMovement = true;
 
     public Piece(PieceType type, PlayerColor color, Movements movements) {
         if (type == null)

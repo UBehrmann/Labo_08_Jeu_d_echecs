@@ -47,7 +47,7 @@ public class Board {
      *
      * @return PlayerColor[][] an array of the colors of the pieces on the board
      */
-    public PlayerColor[][] getPositionOfPieceColors() {
+    private PlayerColor[][] getPositionOfPieceColors() {
         PlayerColor[][] piecesColors = new PlayerColor[this.width][this.height];
         for (int i = 0; i < this.width; ++i) {
             for (int j = 0; j < this.height; ++j) {
@@ -64,7 +64,7 @@ public class Board {
      * @param positionInBoard the position of the piece
      * @return Piece the piece at the specified position
      */
-    public Piece getPieceInBoard(Coordinates positionInBoard) {
+    private Piece getPieceInBoard(Coordinates positionInBoard) {
         return cells[positionInBoard.getX()][positionInBoard.getY()].getPiece();
     }
 
@@ -240,7 +240,7 @@ public class Board {
      * @param color the color of the king
      * @return boolean true if the king is in check, false otherwise
      */
-    public boolean testCheck(Coordinates positionKing, PlayerColor color) {
+    private boolean testCheck(Coordinates positionKing, PlayerColor color) {
 
         if(positionKing == null || color == null) return false;
 
@@ -368,7 +368,7 @@ public class Board {
      * @param piece the piece to add
      * @param position the position of the piece
      */
-    public void addPiece(Piece piece, Coordinates position) {
+    protected void addPiece(Piece piece, Coordinates position) {
         setPiece(piece, position);
     }
 
@@ -404,7 +404,7 @@ public class Board {
      *
      * @param position the position of the piece to remove
      */
-    public void removePiece(Coordinates position) {
+    private void removePiece(Coordinates position) {
         checkPositionOnBoard(position);
         cells[position.getX()][position.getY()].removePiece();
 
