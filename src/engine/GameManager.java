@@ -15,6 +15,9 @@ public class GameManager implements ChessController {
                 BoardDimensions.HEIGHT.getValue());
     }
 
+    /**
+     * Update the message displayed by the view
+     */
     protected void updateMessage() {
         if (view == null || board == null) return;
 
@@ -45,6 +48,9 @@ public class GameManager implements ChessController {
         view.displayMessage(message.toString());
     }
 
+    /**
+     * Initialize the listeners
+     */
     private void initListeners() {
 
         // Add the listener to add pieces
@@ -96,6 +102,11 @@ public class GameManager implements ChessController {
         });
     }
 
+    /**
+     * Start the game
+     *
+     * @param view The view to use
+     */
     @Override
     public void start(ChessView view) {
         this.view = view;
@@ -106,13 +117,19 @@ public class GameManager implements ChessController {
         // Initialize the piece listeners
         initListeners();
 
-        // Put the pieces on the board
-        board.initialize();
-
         // Update the message
         updateMessage();
     }
 
+    /**
+     * Move a piece
+     *
+     * @param fromX The X coordinate of the piece to move
+     * @param fromY The Y coordinate of the piece to move
+     * @param toX   The X coordinate of the destination
+     * @param toY   The Y coordinate of the destination
+     * @return True if the movement is valid, false otherwise
+     */
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {
 
@@ -125,6 +142,9 @@ public class GameManager implements ChessController {
         return valid;
     }
 
+    /**
+     * Start a new game
+     */
     @Override
     public void newGame() {
 

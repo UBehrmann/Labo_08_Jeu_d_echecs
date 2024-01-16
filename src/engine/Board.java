@@ -10,6 +10,14 @@ import java.util.Objects;
 
 public class Board {
 
+    /**
+     * An interface to listen to the actions on the pieces.
+     * The action can be defined in a lambda expression.
+     */
+    public interface PieceListener {
+        void action(Piece piece, Cell cell);
+    }
+
     private final int width;
     private final int height;
     private final Cell[][] cells;
@@ -18,6 +26,12 @@ public class Board {
     private PieceListener onPromotePiece;
     private int turn = 1;
 
+    /**
+     * Create a board with the specified dimensions
+     *
+     * @param width the width of the board
+     * @param height the height of the board
+     */
     public Board(int width, int height) {
 
         this.width = width;
@@ -28,6 +42,11 @@ public class Board {
         reset();
     }
 
+    /**
+     * Get an array of the colors of the pieces on the board
+     *
+     * @return PlayerColor[][] an array of the colors of the pieces on the board
+     */
     public PlayerColor[][] getPositionOfPieceColors() {
         PlayerColor[][] piecesColors = new PlayerColor[this.width][this.height];
         for (int i = 0; i < this.width; ++i) {
@@ -39,10 +58,26 @@ public class Board {
         return piecesColors;
     }
 
+    /**
+     * Get the piece at the specified position
+     *
+     * @param positionInBoard the position of the piece
+     * @return Piece the piece at the specified position
+     */
     public Piece getPieceInBoard(Coordinates positionInBoard) {
         return cells[positionInBoard.getX()][positionInBoard.getY()].getPiece();
     }
 
+    /**
+     * Do the movement of the piece at the specified position to the specified
+     * position
+     *
+     * @param x1 the x position of the piece to move
+     * @param y1 the y position of the piece to move
+     * @param x2 the x position of the destination
+     * @param y2 the y position of the destination
+     * @return boolean true if the movement is done, false otherwise
+     */
     public boolean doMovement(int x1, int y1, int x2, int y2) {
         // Check if the piece is on the board
         Piece piece = cells[x1][y1].getPiece();
@@ -97,6 +132,16 @@ public class Board {
         return true;
     }
 
+    /**
+     * Do the movement of the piece at the specified position to the specified
+     * position
+     *
+     * @param piecesColors the colors of the pieces on the board
+     * @param piece the piece to move
+     * @param positionInitial the position of the piece to move
+     * @param positionFinal the position of the destination
+     * @return boolean true if the movement is done, false otherwise
+     */
     private boolean checkNoPieceInWay(PlayerColor[][] piecesColors, Piece piece, Coordinates positionInitial, Coordinates positionFinal) {
         // Get the possible movement of the part from the initial to the final
         // position
@@ -130,6 +175,11 @@ public class Board {
         return false;
     }
 
+    /**
+     * Do the castling movement
+     *
+     * @param positionFinal the position of the king after the castling
+     */
     private void castling(Coordinates positionFinal) {
 
         // Check if the rook is in the correct position
@@ -153,6 +203,12 @@ public class Board {
         }
     }
 
+    /**
+     * Move a piece from the initial position to the final position
+     *
+     * @param positionInitial the initial position of the piece
+     * @param positionFinal the final position of the piece
+     */
     private void movePiece(Coordinates positionInitial,
                            Coordinates positionFinal) {
 
@@ -166,19 +222,28 @@ public class Board {
         piece.clearFirstMovement();
     }
 
+    /**
+     * Check if the king is in check
+     *
+     * @return boolean true if the king is in check, false otherwise
+     */
     public boolean isCheck() {
         PlayerColor color = getCurrentPlayer();
 
-        // Find the king
-        Cell kingCell = findKing(color);
-        if (kingCell == null) return false;
-        Coordinates positionKing = new Coordinates(kingCell.getX(),
-                kingCell.getY());
-
-        return testCheck(positionKing, color);
+        return testCheck(findKing(color), color);
     }
 
+    /**
+     * Check if the king is in check
+     *
+     * @param positionKing the position of the king
+     * @param color the color of the king
+     * @return boolean true if the king is in check, false otherwise
+     */
     public boolean testCheck(Coordinates positionKing, PlayerColor color) {
+
+        if(positionKing == null || color == null) return false;
+
         // Check if the king is in check
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -193,23 +258,31 @@ public class Board {
         return false;
     }
 
+    /**
+     * Check if the king is in checkmate
+     *
+     * @return boolean true if the king is in checkmate, false otherwise
+     */
     public boolean isCheckMate() {
         PlayerColor color = getCurrentPlayer();
-
-        // Find the king
-        Cell kingCell = findKing(color);
-        if (kingCell == null) return false;
-        Coordinates positionKing = new Coordinates(kingCell.getX(),
-                kingCell.getY());
 
         // Check if the king is in check
         if ( !isCheck() ) return false;
 
         // Check if the king can move
-        return checkIfKingCanNotMove(positionKing);
+        return checkIfKingCanNotMove(findKing(color));
     }
 
+    /**
+     * Check if the king can not move in any direction
+     *
+     * @param positionKing the position of the king
+     * @return boolean true if the king can not move, false otherwise
+     */
     private boolean checkIfKingCanNotMove(Coordinates positionKing) {
+
+        if(positionKing == null) return false;
+
         for (int i = positionKing.getX() - 1; i <= positionKing.getX() + 1; i++) {
             for (int j = positionKing.getY() - 1; j <= positionKing.getY() + 1; j++) {
                 if ((i == positionKing.getX() && j == positionKing.getY()) || i > width -1 || j > height -1 || i < 0 || j < 0) continue;
@@ -220,16 +293,18 @@ public class Board {
         return true;
     }
 
+    /**
+     * Check if the king is in stalemate
+     *
+     * @return boolean true if the king is in stalemate, false otherwise
+     */
     public boolean isStaleMate() {
         PlayerColor color = getCurrentPlayer();
 
         //Find the king
-        Cell kingCell = findKing(color);
+        Coordinates positionKing = findKing(color);
 
-        if (kingCell == null) return false;
-
-        Coordinates positionKing = new Coordinates(kingCell.getX(),
-                kingCell.getY());
+        if (positionKing == null) return false;
 
         // Check if the king is in check
         if (isCheck()) return false;
@@ -238,6 +313,9 @@ public class Board {
         return checkIfKingCanNotMove(positionKing);
     }
 
+    /**
+     * Reset the board
+     */
     public void reset() {
 
         // Remove all pieces from the board
@@ -251,6 +329,9 @@ public class Board {
         turn = 1;
     }
 
+    /**
+     * Initialize the board, set all the pieces on the board
+     */
     public void initialize() {
 
         // Put the pieces on the board
@@ -281,10 +362,22 @@ public class Board {
         }
     }
 
+    /**
+     * Add a piece on the board
+     *
+     * @param piece the piece to add
+     * @param position the position of the piece
+     */
     public void addPiece(Piece piece, Coordinates position) {
         setPiece(piece, position);
     }
 
+    /**
+     * Remove a piece from the board
+     *
+     * @param piece the piece to remove
+     * @param position the position of the piece to remove
+     */
     public void setPiece(Piece piece, Coordinates position) {
 
         Objects.requireNonNull(piece, "Piece cannot be null");
@@ -306,6 +399,11 @@ public class Board {
         }
     }
 
+    /**
+     * Remove a piece from the board
+     *
+     * @param position the position of the piece to remove
+     */
     public void removePiece(Coordinates position) {
         checkPositionOnBoard(position);
         cells[position.getX()][position.getY()].removePiece();
@@ -315,46 +413,82 @@ public class Board {
         }
     }
 
+    /**
+     * Check if the position is on the board
+     *
+     * @param position the position to check
+     */
     private void checkPositionOnBoard(Coordinates position) {
         if (position.getX() < 0 || position.getX() >= width || position.getY() < 0 || position.getY() >= height)
             throw new IllegalArgumentException("Position out of board");
     }
 
+    /**
+     * Get the current player
+     *
+     * @return PlayerColor the color current player
+     */
     public PlayerColor getCurrentPlayer() {
         return turn % 2 == 1 ? PlayerColor.WHITE : PlayerColor.BLACK;
     }
 
+    /**
+     * Get the opponent player
+     *
+     * @return PlayerColor the color of the opponent player
+     */
     public PlayerColor getOpponentPlayer() {
         return turn % 2 == 0 ? PlayerColor.WHITE : PlayerColor.BLACK;
     }
 
+    /**
+     * Set the listener to add pieces
+     *
+     * @param listener the listener to add pieces
+     */
     public void setAddPieceListener(PieceListener listener) {
         this.onAddPiece = listener;
     }
 
+    /**
+     * Set the listener to remove pieces
+     *
+     * @param listener the listener to remove pieces
+     */
     public void setRemovePieceListener(PieceListener listener) {
         this.onRemovePiece = listener;
     }
 
+    /**
+     * Set the listener to promote pawns
+     *
+     * @param listener the listener to promote pawns
+     */
     public void setPromotePawnListener(PieceListener listener) {
         this.onPromotePiece = listener;
     }
 
+    /**
+     * Get the turn number
+     *
+     * @return int the turn number
+     */
     public int getTurn() {
         return turn;
     }
 
-    private Cell findKing(PlayerColor color) {
+    /**
+     * Find the king of the specified color
+     *
+     * @param color the color of the king
+     * @return Coordinates the coordinates where the king is
+     */
+    private Coordinates findKing(PlayerColor color) {
         for (int i = 0; i < width; i++)
             for (int j = 0; j < height; j++)
                 if (cells[i][j].getPiece() instanceof King &&
                         cells[i][j].getPiece().getColor() == color)
-                    return cells[i][j];
+                    return new Coordinates(i, j);
         return null;
     }
-
-    public interface PieceListener {
-        void action(Piece piece, Cell cell);
-    }
-
 }

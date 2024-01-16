@@ -1,10 +1,26 @@
 <div align="justify" style="margin-right:25px;margin-left:25px">
 
-# Mouvement
+# Laboratoire 8 - Jeu d'échecs
 
-## Fichiers et Leur Rôle
+Groupe : L08GrK
 
-### `Step.java`
+Étudiants : Rodrigo Lopes dos Santos, Urs Behrmann
+
+____________________
+
+# Modélisation UML
+
+
+
+____________________
+
+# Choix de conception
+
+## Mouvement
+
+### Fichiers et Leur Rôle
+
+#### `Step.java`
 - Définit un pas de mouvement.
 - Selon le maxStep, il définie un mouvement via des les coordonnées : 
   - [Pas de mouvement, Pas de mouvement + 1 pas, Pas de mouvement + 2 pas, ...., Pas de mouvement + maxStep]
@@ -24,13 +40,13 @@ public class X extends Piece {
 ```
 ![](Images/Step.png)
 
-### `Movements.java`
+#### `Movements.java`
 - Gère les mouvements des pièces.
 - Contient une liste de `Step` et une méthode pour obtenir `Step` possible en fonction des positions initiale et finale.
 
 ![](Images/Mouvements.png)
 
-### `Piece.java`
+#### `Piece.java`
 - Contient une méthode `Coordinates[] getPossibleMovement( ... )` qui via les `movements` et les positions initiale et finale détermine le step possible et retourne son mouvement.
 - Contient une méthode `boolean movementIsOk( ... )` qui via les positions initiale, finale et `Coordinates[] getPossibleMovement( ... )` détermine le mouvement possible et cherche dans celui-ci si la position final si trouve.
   - Si oui : Le mouvement de la position initiale à finale est possible
@@ -38,7 +54,7 @@ public class X extends Piece {
 
 ![](Images/Piece.png)
 
-## Fonctionnement Général
+### Fonctionnement Général
 
 Les mouvements des pièces sont gérés de manière modulaire, où chaque pièce a ses propres règles de mouvement définies dans des classes spécifiques (par exemple, `Knight.java`, `Pawn.java`). Ces classes utilisent la classe `Movements` pour gérer les déplacements possibles. La classe `Step` joue un rôle clé en définissant la nature d'un pas de mouvement, tandis que `Coordinates` est utilisée pour représenter et manipuler les positions sur le plateau.
 
@@ -64,6 +80,8 @@ public class King extends Piece {
     }
 }
 ```
+
+____________________
 
 # Tests
 
@@ -107,11 +125,15 @@ On a que deux rois sur le plateau pour tester le mouvement des rois et leur atta
 
 On peut aussi tester le mouvement des rois quand il y a une pièce qui peut attaquer le roi et est donc un mouvement illégal.
 
+<img src="Images/king.png" alt="king">
+
 ## test bishop
 
 On a que deux fous sur le plateau pour tester le mouvement des fous et leur attack.
 
 On peut aussi tester le mouvement des fous quand il y a des pièces entre le fou et la position finale.
+
+<img src="Images/bishop.png" alt="bishop">
 
 ## test pawn promotion
 
@@ -119,25 +141,25 @@ On a que deux pions sur le plateau pour tester la promotion des pions.
 
 ## test check
 
-On a quelque pièces sur le plateau pour tester le check pour noir.
+On a quelque pièces sur le plateau pour tester le "check" pour noir.
 
 <img src="Images/check.png" alt="check">
 
 ## test checkmate
 
-On a quelque pièces sur le plateau pour tester le checkmate pour noir.
+On a quelque pièces sur le plateau pour tester le "checkmate" pour noir.
 
 <img src="Images/checkmate.png" alt="checkmate">
 
 ## test stalemate
 
-On a quelque pièces sur le plateau pour tester le stalemate pour noir.
+On a quelque pièces sur le plateau pour tester le "stalemate" pour noir.
 
 <img src="Images/stalemate.png" alt="stalemate">
 
 ## test castling
 
-On a les deux rois et les quatre tours sur le plateau pour tester les deux castling pour les deux couleurs.
+On a les deux rois et les quatre tours sur le plateau pour tester les deux "castling" pour les deux couleurs.
 
 <img src="Images/castling.png" alte="catling">
 
